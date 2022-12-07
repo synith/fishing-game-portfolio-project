@@ -91,7 +91,7 @@ public class FishingMechanic : MonoBehaviour
         isShrinking = false;
         hasAttempted = false;
         SetDifficulty(difficulty);
-        UpdateZoneColor(playerZone, targetZone, insideZoneColor, outsideZoneColor);
+        HandleZoneColorChange(insideZoneColor, outsideZoneColor);
         OnFishingRestart?.Invoke(this, EventArgs.Empty);
     }
 
@@ -102,8 +102,8 @@ public class FishingMechanic : MonoBehaviour
             StartFishing();
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
-        { 
+        if (Input.GetKeyDown(KeyCode.R) && hasAttempted)
+        {
             RestartFishing(difficulty);
         }
 
@@ -125,7 +125,21 @@ public class FishingMechanic : MonoBehaviour
 
         if (!isShrinking) return;
 
-        if (currentRadius < MIN_RADIUS)
+        HandleShrinkingPlayerZone();
+
+        if (hasAttempted) return;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            FishAction();
+        }
+    }
+
+    bool PlayerZoneStoppedShrinking() => currentRadius < MIN_RADIUS;
+
+    void HandleShrinkingPlayerZone()
+    {
+        if (PlayerZoneStoppedShrinking())
         {
             FishAction();
             return;
@@ -134,22 +148,14 @@ public class FishingMechanic : MonoBehaviour
         currentRadius -= shrinkRate * Time.deltaTime;
 
         playerZone.SetZone(currentRadius, PLAYER_ZONE_THICKNESS);
-        UpdateZoneColor(playerZone, targetZone, insideZoneColor, outsideZoneColor);
-
-
-        if (hasAttempted) return;
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        { 
-            FishAction();
-        }
+        HandleZoneColorChange(insideZoneColor, outsideZoneColor);
     }
 
-    void UpdateZoneColor(Zone zone, Zone targetZone, Color insideZoneColor, Color outsideZoneColor)
+    void HandleZoneColorChange(Color insideZoneColor, Color outsideZoneColor)
     {
-        if (PlayerInTargetZone(zone, targetZone))
+        if (PlayerInTargetZone(playerZone, targetZone))
         {
-            zone.SetColor(insideZoneColor);
+            playerZone.SetColor(insideZoneColor);
         }
         else
         {
