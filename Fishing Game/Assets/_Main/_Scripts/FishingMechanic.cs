@@ -30,24 +30,31 @@ public class FishingMechanic : MonoBehaviour
     const float PLAYER_ZONE_THICKNESS = 0.2f;
     const float MIN_RADIUS = 0.1f;
 
-
     float currentRadius;
-    bool isActive;
+    bool isShrinking;
     bool hasAttempted;
-
 
 
 
     void Start()
     {
-        targetZone.SetZone(TARGET_ZONE_RADIUS, TARGET_ZONE_THICKNESS);
-        targetZone.UpdateZone(TARGET_ZONE_RADIUS, TARGET_ZONE_THICKNESS);
+        SetDifficulty(difficulty);
+        SetTargetZone();
+        //SetTargetZone(GetHandicap(IFishingRod.GetRodLevel(), IFish.GetFishLevel()));
+    }
 
-        float startRadius = GetStartRadius(difficulty);
-        playerZone.SetZone(startRadius, PLAYER_ZONE_THICKNESS);
-        playerZone.UpdateZone(startRadius, PLAYER_ZONE_THICKNESS);
+    void SetTargetZone(int handicap = 0)
+    {
+        handicap = Mathf.Clamp(handicap, 0, 4);
+        float thickness = TARGET_ZONE_THICKNESS;
+        // TODO: increase thickness based on handicap
+        targetZone.SetZone(TARGET_ZONE_RADIUS, thickness);
+    }
 
-        currentRadius = startRadius;
+    int GetHandicap(int rodLevel, int fishLevel)
+    {
+        int handicap = rodLevel - fishLevel;
+        return handicap < 0 ? 0 : handicap;
     }
 
     void SetDifficulty(Difficulty difficulty)
@@ -58,7 +65,6 @@ public class FishingMechanic : MonoBehaviour
         currentRadius = startRadius;
 
         playerZone.SetZone(startRadius, PLAYER_ZONE_THICKNESS);
-        playerZone.UpdateZone(startRadius, PLAYER_ZONE_THICKNESS);
 
         OnDifficultyChanged?.Invoke(this, difficulty);
     }
@@ -74,30 +80,34 @@ public class FishingMechanic : MonoBehaviour
         }
     }
 
+    void StartFishing()
+    {
+        isShrinking = true;
+        OnFishingStart?.Invoke(this, EventArgs.Empty);
+    }
+
+    void RestartFishing(Difficulty difficulty)
+    {
+        isShrinking = false;
+        hasAttempted = false;
+        SetDifficulty(difficulty);
+        UpdateZoneColor(playerZone, targetZone, insideZoneColor, outsideZoneColor);
+        OnFishingRestart?.Invoke(this, EventArgs.Empty);
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.T) && !hasAttempted)
-        { 
-            isActive = true;
-            OnFishingStart?.Invoke(this, EventArgs.Empty);
+        {
+            StartFishing();
         }
-
 
         if (Input.GetKeyDown(KeyCode.R))
-        {
-            isActive = false;
-            hasAttempted = false;
-
-            float startRadius = GetStartRadius(difficulty);
-            playerZone.SetZone(startRadius, PLAYER_ZONE_THICKNESS);
-            playerZone.UpdateZone(startRadius, PLAYER_ZONE_THICKNESS);
-            UpdateZoneColor(playerZone, targetZone, insideZoneColor, outsideZoneColor);
-
-            currentRadius = startRadius;
-            OnFishingRestart?.Invoke(this, EventArgs.Empty);
+        { 
+            RestartFishing(difficulty);
         }
 
-        if (!hasAttempted && !isActive)
+        if (!hasAttempted && !isShrinking)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -113,7 +123,7 @@ public class FishingMechanic : MonoBehaviour
             }
         }
 
-        if (!isActive) return;
+        if (!isShrinking) return;
 
         if (currentRadius < MIN_RADIUS)
         {
@@ -124,15 +134,13 @@ public class FishingMechanic : MonoBehaviour
         currentRadius -= shrinkRate * Time.deltaTime;
 
         playerZone.SetZone(currentRadius, PLAYER_ZONE_THICKNESS);
-        playerZone.UpdateZone(currentRadius, PLAYER_ZONE_THICKNESS);
         UpdateZoneColor(playerZone, targetZone, insideZoneColor, outsideZoneColor);
 
 
         if (hasAttempted) return;
 
         if (Input.GetKeyDown(KeyCode.Space))
-        {
-            hasAttempted = true;
+        { 
             FishAction();
         }
     }
@@ -151,7 +159,8 @@ public class FishingMechanic : MonoBehaviour
 
     void FishAction()
     {
-        isActive = false;
+        hasAttempted = true;
+        isShrinking = false;
         bool isCaught = PlayerInTargetZone(playerZone, targetZone);
         OnFishAction?.Invoke(this, isCaught);
     }
@@ -159,11 +168,11 @@ public class FishingMechanic : MonoBehaviour
 
     bool PlayerInTargetZone(Zone playerZone, Zone targetZone)
     {
-        if (playerZone.GetOuterRadius() < targetZone.GetInnerRadius())
+        if (playerZone.GetOutsideRingRadius() < targetZone.GetInsideRingRadius())
         {
             return false;
         }
-        else if (playerZone.GetInnerRadius() > targetZone.GetOuterRadius())
+        else if (playerZone.GetInsideRingRadius() > targetZone.GetOutsideRingRadius())
         {
             return false;
         }
