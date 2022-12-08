@@ -43,6 +43,20 @@ public class FishingMechanic : MonoBehaviour
         //SetTargetZone(GetHandicap(IFishingRod.GetRodLevel(), IFish.GetFishLevel()));
     }
 
+    void OnEnable()
+    {
+        FishingControls.Instance.OnFishAttempt += FishingControls_OnFishAttempt;
+    }
+    void OnDisable()
+    {
+        FishingControls.Instance.OnFishAttempt -= FishingControls_OnFishAttempt;
+    }
+
+    private void FishingControls_OnFishAttempt(object sender, EventArgs e)
+    {
+        FishAction();
+    }
+
     void SetTargetZone(int handicap = 0)
     {
         handicap = Mathf.Clamp(handicap, 0, 4);
@@ -107,38 +121,16 @@ public class FishingMechanic : MonoBehaviour
             RestartFishing(difficulty);
         }
 
-        if (!hasAttempted && !isShrinking)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                SetDifficulty(Difficulty.Easy);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                SetDifficulty(Difficulty.Medium);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                SetDifficulty(Difficulty.Hard);
-            }
-        }
-
-        if (!isShrinking) return;
-
+               
         HandleShrinkingPlayerZone();
-
-        if (hasAttempted) return;
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            FishAction();
-        }
     }
 
     bool PlayerZoneStoppedShrinking() => currentRadius < MIN_RADIUS;
 
     void HandleShrinkingPlayerZone()
     {
+        if (!isShrinking) return;
+
         if (PlayerZoneStoppedShrinking())
         {
             FishAction();
@@ -165,6 +157,7 @@ public class FishingMechanic : MonoBehaviour
 
     void FishAction()
     {
+        if (hasAttempted || !isShrinking) return;
         hasAttempted = true;
         isShrinking = false;
         bool isCaught = PlayerInTargetZone(playerZone, targetZone);
