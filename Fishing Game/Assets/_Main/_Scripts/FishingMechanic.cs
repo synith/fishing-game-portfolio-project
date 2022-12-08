@@ -46,16 +46,22 @@ public class FishingMechanic : MonoBehaviour
     void OnEnable()
     {
         FishingControls.Instance.OnFishAttempt += FishingControls_OnFishAttempt;
+        FishingControls.Instance.OnDebugTest += FishingControls_OnDebugTest;
+        FishingControls.Instance.OnDebugRestart += FishingControls_OnDebugRestart;
     }
+
+    private void FishingControls_OnFishAttempt(object sender, EventArgs e) => FishAction();
+    private void FishingControls_OnDebugTest(object sender, EventArgs e) => StartFishing();
+    private void FishingControls_OnDebugRestart(object sender, EventArgs e) => RestartFishing(difficulty);
+
     void OnDisable()
     {
         FishingControls.Instance.OnFishAttempt -= FishingControls_OnFishAttempt;
+        FishingControls.Instance.OnDebugTest -= FishingControls_OnDebugTest;
+        FishingControls.Instance.OnDebugRestart -= FishingControls_OnDebugRestart;
     }
 
-    private void FishingControls_OnFishAttempt(object sender, EventArgs e)
-    {
-        FishAction();
-    }
+    
 
     void SetTargetZone(int handicap = 0)
     {
@@ -96,12 +102,23 @@ public class FishingMechanic : MonoBehaviour
 
     void StartFishing()
     {
+        if (hasAttempted) return;
         isShrinking = true;
         OnFishingStart?.Invoke(this, EventArgs.Empty);
     }
 
+    void FishAction()
+    {
+        if (hasAttempted || !isShrinking) return;
+        hasAttempted = true;
+        isShrinking = false;
+        bool isCaught = PlayerInTargetZone(playerZone, targetZone);
+        OnFishAction?.Invoke(this, isCaught);
+    }
+
     void RestartFishing(Difficulty difficulty)
     {
+        if (!hasAttempted) return;
         isShrinking = false;
         hasAttempted = false;
         SetDifficulty(difficulty);
@@ -111,17 +128,6 @@ public class FishingMechanic : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T) && !hasAttempted)
-        {
-            StartFishing();
-        }
-
-        if (Input.GetKeyDown(KeyCode.R) && hasAttempted)
-        {
-            RestartFishing(difficulty);
-        }
-
-               
         HandleShrinkingPlayerZone();
     }
 
@@ -153,16 +159,7 @@ public class FishingMechanic : MonoBehaviour
         {
             playerZone.SetColor(outsideZoneColor);
         }
-    }
-
-    void FishAction()
-    {
-        if (hasAttempted || !isShrinking) return;
-        hasAttempted = true;
-        isShrinking = false;
-        bool isCaught = PlayerInTargetZone(playerZone, targetZone);
-        OnFishAction?.Invoke(this, isCaught);
-    }
+    }  
 
 
     bool PlayerInTargetZone(Zone playerZone, Zone targetZone)

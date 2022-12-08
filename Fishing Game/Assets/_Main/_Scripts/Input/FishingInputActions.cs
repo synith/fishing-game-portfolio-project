@@ -28,7 +28,7 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
             ""id"": ""acc6ac12-36ac-4fbe-8b32-070a541fb922"",
             ""actions"": [
                 {
-                    ""name"": ""Fish"",
+                    ""name"": ""FishAttempt"",
                     ""type"": ""Button"",
                     ""id"": ""b7caa2c9-c8b3-446a-b37c-f0d54e0de260"",
                     ""expectedControlType"": ""Button"",
@@ -45,7 +45,7 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Fish"",
+                    ""action"": ""FishAttempt"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -56,7 +56,7 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Fish"",
+                    ""action"": ""FishAttempt"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -67,7 +67,7 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Fish"",
+                    ""action"": ""FishAttempt"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -78,7 +78,55 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Fish"",
+                    ""action"": ""FishAttempt"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Debug"",
+            ""id"": ""3b3890eb-91be-4a7b-998b-e14bc73fe08a"",
+            ""actions"": [
+                {
+                    ""name"": ""Test"",
+                    ""type"": ""Button"",
+                    ""id"": ""9807ef8d-5473-4f86-bb1d-00676e099152"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Restart"",
+                    ""type"": ""Button"",
+                    ""id"": ""c4243c49-30c8-4907-b628-867d3fc30062"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""03b21311-8b55-46ab-939f-03c12b499b8a"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Test"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a7a0e2c8-a624-4ebe-b62f-37d9cb31be5c"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Restart"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -89,7 +137,11 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_Fish = m_Player.FindAction("Fish", throwIfNotFound: true);
+        m_Player_FishAttempt = m_Player.FindAction("FishAttempt", throwIfNotFound: true);
+        // Debug
+        m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
+        m_Debug_Test = m_Debug.FindAction("Test", throwIfNotFound: true);
+        m_Debug_Restart = m_Debug.FindAction("Restart", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -149,12 +201,12 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
     // Player
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
-    private readonly InputAction m_Player_Fish;
+    private readonly InputAction m_Player_FishAttempt;
     public struct PlayerActions
     {
         private @FishingInputActions m_Wrapper;
         public PlayerActions(@FishingInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Fish => m_Wrapper.m_Player_Fish;
+        public InputAction @FishAttempt => m_Wrapper.m_Player_FishAttempt;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -164,22 +216,68 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_PlayerActionsCallbackInterface != null)
             {
-                @Fish.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFish;
-                @Fish.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFish;
-                @Fish.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFish;
+                @FishAttempt.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFishAttempt;
+                @FishAttempt.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFishAttempt;
+                @FishAttempt.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFishAttempt;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Fish.started += instance.OnFish;
-                @Fish.performed += instance.OnFish;
-                @Fish.canceled += instance.OnFish;
+                @FishAttempt.started += instance.OnFishAttempt;
+                @FishAttempt.performed += instance.OnFishAttempt;
+                @FishAttempt.canceled += instance.OnFishAttempt;
             }
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Debug
+    private readonly InputActionMap m_Debug;
+    private IDebugActions m_DebugActionsCallbackInterface;
+    private readonly InputAction m_Debug_Test;
+    private readonly InputAction m_Debug_Restart;
+    public struct DebugActions
+    {
+        private @FishingInputActions m_Wrapper;
+        public DebugActions(@FishingInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Test => m_Wrapper.m_Debug_Test;
+        public InputAction @Restart => m_Wrapper.m_Debug_Restart;
+        public InputActionMap Get() { return m_Wrapper.m_Debug; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(DebugActions set) { return set.Get(); }
+        public void SetCallbacks(IDebugActions instance)
+        {
+            if (m_Wrapper.m_DebugActionsCallbackInterface != null)
+            {
+                @Test.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnTest;
+                @Test.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnTest;
+                @Test.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnTest;
+                @Restart.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnRestart;
+                @Restart.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnRestart;
+                @Restart.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnRestart;
+            }
+            m_Wrapper.m_DebugActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Test.started += instance.OnTest;
+                @Test.performed += instance.OnTest;
+                @Test.canceled += instance.OnTest;
+                @Restart.started += instance.OnRestart;
+                @Restart.performed += instance.OnRestart;
+                @Restart.canceled += instance.OnRestart;
+            }
+        }
+    }
+    public DebugActions @Debug => new DebugActions(this);
     public interface IPlayerActions
     {
-        void OnFish(InputAction.CallbackContext context);
+        void OnFishAttempt(InputAction.CallbackContext context);
+    }
+    public interface IDebugActions
+    {
+        void OnTest(InputAction.CallbackContext context);
+        void OnRestart(InputAction.CallbackContext context);
     }
 }

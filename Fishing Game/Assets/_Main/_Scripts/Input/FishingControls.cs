@@ -8,6 +8,9 @@ public class FishingControls : MonoBehaviour
 
     public event EventHandler OnFishAttempt;
 
+    public event EventHandler OnDebugTest;
+    public event EventHandler OnDebugRestart;
+
     FishingInputActions fishingInputActions;
 
     void Awake()
@@ -24,8 +27,27 @@ public class FishingControls : MonoBehaviour
 
     void OnEnable()
     {
-        fishingInputActions.Player.Fish.performed += FishAttempt_Performed;
-        fishingInputActions.Player.Fish.Enable();
+        fishingInputActions.Player.FishAttempt.performed += FishAttempt_Performed;
+        fishingInputActions.Player.FishAttempt.Enable();
+
+
+        fishingInputActions.Debug.Test.performed += Test_performed;
+        fishingInputActions.Debug.Test.Enable();
+
+        fishingInputActions.Debug.Restart.performed += Restart_performed;
+        fishingInputActions.Debug.Restart.Enable();
+    }
+
+    private void Restart_performed(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        OnDebugRestart?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Test_performed(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        OnDebugTest?.Invoke(this, EventArgs.Empty);
     }
 
     void FishAttempt_Performed(InputAction.CallbackContext context)
@@ -36,8 +58,14 @@ public class FishingControls : MonoBehaviour
 
     void OnDisable()
     {
-        fishingInputActions.Player.Fish.performed += FishAttempt_Performed;
-        fishingInputActions.Player.Fish.Enable();
+        fishingInputActions.Player.FishAttempt.performed -= FishAttempt_Performed;
+        fishingInputActions.Player.FishAttempt.Disable();
+
+        fishingInputActions.Debug.Test.performed -= Test_performed;
+        fishingInputActions.Debug.Test.Disable();
+
+        fishingInputActions.Debug.Restart.performed -= Test_performed;
+        fishingInputActions.Debug.Restart.Disable();
     }
 
 
