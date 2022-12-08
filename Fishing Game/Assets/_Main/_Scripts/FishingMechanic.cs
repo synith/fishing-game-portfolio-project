@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class FishingMechanic : MonoBehaviour
 {
+    #region Variables
     public enum Difficulty { Easy, Medium, Hard };
 
     public static event EventHandler<bool> OnFishAction;
@@ -33,8 +34,7 @@ public class FishingMechanic : MonoBehaviour
     float currentRadius;
     bool isShrinking;
     bool hasAttempted;
-
-
+    #endregion
 
     void Start()
     {
@@ -43,6 +43,12 @@ public class FishingMechanic : MonoBehaviour
         //SetTargetZone(GetHandicap(IFishingRod.GetRodLevel(), IFish.GetFishLevel()));
     }
 
+    void Update()
+    {
+        HandleShrinkingPlayerZone();
+    }
+
+    #region Event Subscription
     void OnEnable()
     {
         FishingControls.Instance.OnFishAttempt += FishingControls_OnFishAttempt;
@@ -50,7 +56,7 @@ public class FishingMechanic : MonoBehaviour
         FishingControls.Instance.OnDebugRestart += FishingControls_OnDebugRestart;
     }
 
-    private void FishingControls_OnFishAttempt(object sender, EventArgs e) => FishAction();
+    private void FishingControls_OnFishAttempt(object sender, EventArgs e) => AttemptToCatchFish();
     private void FishingControls_OnDebugTest(object sender, EventArgs e) => StartFishing();
     private void FishingControls_OnDebugRestart(object sender, EventArgs e) => RestartFishing(difficulty);
 
@@ -60,22 +66,7 @@ public class FishingMechanic : MonoBehaviour
         FishingControls.Instance.OnDebugTest -= FishingControls_OnDebugTest;
         FishingControls.Instance.OnDebugRestart -= FishingControls_OnDebugRestart;
     }
-
-    
-
-    void SetTargetZone(int handicap = 0)
-    {
-        handicap = Mathf.Clamp(handicap, 0, 4);
-        float thickness = TARGET_ZONE_THICKNESS;
-        // TODO: increase thickness based on handicap
-        targetZone.SetZone(TARGET_ZONE_RADIUS, thickness);
-    }
-
-    int GetHandicap(int rodLevel, int fishLevel)
-    {
-        int handicap = rodLevel - fishLevel;
-        return handicap < 0 ? 0 : handicap;
-    }
+    #endregion
 
     void SetDifficulty(Difficulty difficulty)
     {
@@ -89,6 +80,68 @@ public class FishingMechanic : MonoBehaviour
         OnDifficultyChanged?.Invoke(this, difficulty);
     }
 
+    void SetTargetZone(int handicap = 0)
+    {
+        handicap = Mathf.Clamp(handicap, 0, 4);
+        float thickness = TARGET_ZONE_THICKNESS;
+        // TODO: increase thickness based on handicap
+        targetZone.SetZone(TARGET_ZONE_RADIUS, thickness);
+    }
+
+    void HandleShrinkingPlayerZone()
+    {
+        if (!isShrinking) return;
+
+        if (PlayerZoneStoppedShrinking())
+        {
+            AttemptToCatchFish();
+            return;
+        }
+
+        currentRadius -= shrinkRate * Time.deltaTime;
+
+        playerZone.SetZone(currentRadius, PLAYER_ZONE_THICKNESS);
+        HandleZoneColorChange(insideZoneColor, outsideZoneColor);
+    }
+    void StartFishing()
+    {
+        if (hasAttempted) return;
+
+        isShrinking = true;
+
+        OnFishingStart?.Invoke(this, EventArgs.Empty);
+    }
+
+    void AttemptToCatchFish()
+    {
+        if (hasAttempted || !isShrinking) return;
+
+        hasAttempted = true;
+        isShrinking = false;
+
+        bool isCaught = PlayerInTargetZone(playerZone, targetZone);
+        OnFishAction?.Invoke(this, isCaught);
+    }
+
+    void RestartFishing(Difficulty difficulty)
+    {
+        if (!hasAttempted) return;
+
+        isShrinking = false;
+        hasAttempted = false;
+
+        SetDifficulty(difficulty);
+        HandleZoneColorChange(insideZoneColor, outsideZoneColor);
+
+        OnFishingRestart?.Invoke(this, EventArgs.Empty);
+    }
+
+    int GetHandicap(int rodLevel, int fishLevel)
+    {
+        int handicap = rodLevel - fishLevel;
+        return handicap < 0 ? 0 : handicap;
+    }
+
     float GetStartRadius(Difficulty difficulty)
     {
         switch (difficulty)
@@ -100,54 +153,7 @@ public class FishingMechanic : MonoBehaviour
         }
     }
 
-    void StartFishing()
-    {
-        if (hasAttempted) return;
-        isShrinking = true;
-        OnFishingStart?.Invoke(this, EventArgs.Empty);
-    }
-
-    void FishAction()
-    {
-        if (hasAttempted || !isShrinking) return;
-        hasAttempted = true;
-        isShrinking = false;
-        bool isCaught = PlayerInTargetZone(playerZone, targetZone);
-        OnFishAction?.Invoke(this, isCaught);
-    }
-
-    void RestartFishing(Difficulty difficulty)
-    {
-        if (!hasAttempted) return;
-        isShrinking = false;
-        hasAttempted = false;
-        SetDifficulty(difficulty);
-        HandleZoneColorChange(insideZoneColor, outsideZoneColor);
-        OnFishingRestart?.Invoke(this, EventArgs.Empty);
-    }
-
-    void Update()
-    {
-        HandleShrinkingPlayerZone();
-    }
-
-    bool PlayerZoneStoppedShrinking() => currentRadius < MIN_RADIUS;
-
-    void HandleShrinkingPlayerZone()
-    {
-        if (!isShrinking) return;
-
-        if (PlayerZoneStoppedShrinking())
-        {
-            FishAction();
-            return;
-        }
-
-        currentRadius -= shrinkRate * Time.deltaTime;
-
-        playerZone.SetZone(currentRadius, PLAYER_ZONE_THICKNESS);
-        HandleZoneColorChange(insideZoneColor, outsideZoneColor);
-    }
+    bool PlayerZoneStoppedShrinking() => currentRadius < MIN_RADIUS;    
 
     void HandleZoneColorChange(Color insideZoneColor, Color outsideZoneColor)
     {
@@ -160,7 +166,6 @@ public class FishingMechanic : MonoBehaviour
             playerZone.SetColor(outsideZoneColor);
         }
     }  
-
 
     bool PlayerInTargetZone(Zone playerZone, Zone targetZone)
     {
