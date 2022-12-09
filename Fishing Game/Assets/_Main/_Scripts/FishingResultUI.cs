@@ -12,7 +12,7 @@ public class FishingResultUI : MonoBehaviour
 
     private void Start()
     {
-        FishingMechanic.OnFishAction += FishingMechanic_OnFishAction;
+        FishingMechanic.OnFishAttempt += FishingMechanic_OnFishAction;
         FishingMechanic.OnFishingStart += FishingMechanic_OnFishingStart;
         FishingMechanic.OnFishingRestart += FishingMechanic_OnFishingRestart;
         FishingMechanic.OnDifficultyChanged += FishingMechanic_OnDifficultyChanged;
