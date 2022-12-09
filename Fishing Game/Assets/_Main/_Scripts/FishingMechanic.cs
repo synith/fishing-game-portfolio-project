@@ -32,7 +32,7 @@ public class FishingMechanic : MonoBehaviour
     [SerializeField] MMFeedbacks AttemptFailedFeedback;
 
     const float TARGET_ZONE_RADIUS = 1f;
-    const float TARGET_ZONE_THICKNESS = 0.5f;
+    const float TARGET_ZONE_THICKNESS = 0.7f;
     const float PLAYER_ZONE_THICKNESS = 0.2f;
     const float MIN_RADIUS = 0.1f;
 
