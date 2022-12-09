@@ -89,6 +89,8 @@ public class FishingMechanic : MonoBehaviour
         FishingControls.Instance.OnFishAttempt -= FishingControls_OnFishAttempt;
         FishingControls.Instance.OnDebugTest -= FishingControls_OnDebugTest;
         FishingControls.Instance.OnDebugRestart -= FishingControls_OnDebugRestart;
+
+        OnFishAttempt -= HandleFishingAttempt;
     }
     #endregion
 
