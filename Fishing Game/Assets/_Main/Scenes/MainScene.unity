@@ -665,6 +665,7 @@ GameObject:
   - component: {fileID: 121284548}
   - component: {fileID: 121284549}
   - component: {fileID: 121284550}
+  - component: {fileID: 121284551}
   m_Layer: 0
   m_Name: AttemptPossibleFeedback
   m_TagString: Untagged
@@ -700,10 +701,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Feedbacks:
-  - {fileID: 121284547}
-  - {fileID: 121284548}
+  - {fileID: 121284551}
   - {fileID: 121284549}
   - {fileID: 121284550}
+  - {fileID: 121284547}
+  - {fileID: 121284548}
   InitializationMode: 2
   SafeMode: 3
   Direction: 0
@@ -1070,7 +1072,55 @@ MonoBehaviour:
     Quantized: 0
     TargetBPM: 120
   DebugActive: 0
-  Sfx: {fileID: 8300000, guid: 08f7fe95527f8e244bde7bd001562b22, type: 3}
+  Sfx: {fileID: 8300000, guid: 20bea83ca8719644f9ce1a9f7fad9e6a, type: 3}
+  RandomSfx: []
+  TestButton: 0
+  TestStopButton: 0
+  PlayMethod: 2
+  PoolSize: 10
+  MinVolume: 1
+  MaxVolume: 1
+  MinPitch: 1
+  MaxPitch: 1
+  SfxAudioMixerGroup: {fileID: 0}
+  Priority: 128
+--- !u!114 &121284551
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121284544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c2ce51367856bd49b72678cc4263225, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Active: 1
+  Label: Sound
+  Chance: 100
+  Timing:
+    TimescaleMode: 0
+    ExcludeFromHoldingPauses: 0
+    ContributeToTotalDuration: 1
+    InitialDelay: 0.1
+    CooldownDuration: 0
+    InterruptsOnStop: 1
+    NumberOfRepeats: 0
+    RepeatForever: 0
+    DelayBetweenRepeats: 1
+    MMFeedbacksDirectionCondition: 0
+    PlayDirection: 0
+    ConstantIntensity: 0
+    UseIntensityInterval: 0
+    IntensityIntervalMin: 0
+    IntensityIntervalMax: 0
+    Sequence: {fileID: 0}
+    TrackID: 0
+    Quantized: 0
+    TargetBPM: 120
+  DebugActive: 0
+  Sfx: {fileID: 8300000, guid: 2651f47fd1611534f85aa8bc1609c3e4, type: 3}
   RandomSfx: []
   TestButton: 0
   TestStopButton: 0
@@ -1279,6 +1329,7 @@ GameObject:
   - component: {fileID: 319427701}
   - component: {fileID: 319427702}
   - component: {fileID: 319427703}
+  - component: {fileID: 319427704}
   m_Layer: 0
   m_Name: AttemptFailedFeedback
   m_TagString: Untagged
@@ -1314,10 +1365,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Feedbacks:
-  - {fileID: 319427700}
-  - {fileID: 319427701}
-  - {fileID: 319427702}
   - {fileID: 319427703}
+  - {fileID: 319427701}
+  - {fileID: 319427704}
+  - {fileID: 319427700}
+  - {fileID: 319427702}
   InitializationMode: 2
   SafeMode: 3
   Direction: 0
@@ -1852,6 +1904,53 @@ MonoBehaviour:
   MaxPitch: 1
   SfxAudioMixerGroup: {fileID: 0}
   Priority: 128
+--- !u!114 &319427704
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319427696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce85594d78e41442a7bfb6ed40e10a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Active: 1
+  Label: Instantiate Object
+  Chance: 100
+  Timing:
+    TimescaleMode: 0
+    ExcludeFromHoldingPauses: 0
+    ContributeToTotalDuration: 1
+    InitialDelay: 0
+    CooldownDuration: 0
+    InterruptsOnStop: 1
+    NumberOfRepeats: 0
+    RepeatForever: 0
+    DelayBetweenRepeats: 1
+    MMFeedbacksDirectionCondition: 0
+    PlayDirection: 0
+    ConstantIntensity: 0
+    UseIntensityInterval: 0
+    IntensityIntervalMin: 0
+    IntensityIntervalMax: 0
+    Sequence: {fileID: 0}
+    TrackID: 0
+    Quantized: 0
+    TargetBPM: 120
+  DebugActive: 0
+  GameObjectToInstantiate: {fileID: 1089465354904564, guid: 2ccc24f92680a8c4f84de700b2f91fd1,
+    type: 3}
+  PositionMode: 0
+  AlsoApplyRotation: 0
+  AlsoApplyScale: 0
+  TargetTransform: {fileID: 0}
+  TargetPosition: {x: 0, y: 0, z: 0}
+  PositionOffset: {x: 0, y: 0, z: 0}
+  CreateObjectPool: 0
+  ObjectPoolSize: 5
+  MutualizePools: 0
 --- !u!1001 &348557431
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2260,7 +2359,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 549006195}
-  m_LocalRotation: {x: 0.11117929, y: 0.8782944, z: -0.3931112, w: 0.24839829}
+  m_LocalRotation: {x: 0.111179285, y: 0.8782944, z: -0.3931112, w: 0.24839827}
   m_LocalPosition: {x: -4.15, y: 8.97, z: 6.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3083,7 +3182,7 @@ MonoBehaviour:
     TimescaleMode: 0
     ExcludeFromHoldingPauses: 0
     ContributeToTotalDuration: 1
-    InitialDelay: 0.15
+    InitialDelay: 0.3
     CooldownDuration: 0
     InterruptsOnStop: 1
     NumberOfRepeats: 0
@@ -3100,7 +3199,7 @@ MonoBehaviour:
     Quantized: 0
     TargetBPM: 120
   DebugActive: 0
-  Sfx: {fileID: 8300000, guid: 79c3541ef044fae438d22a2cf5046181, type: 3}
+  Sfx: {fileID: 8300000, guid: 6cc3e7f988f483047980f90e56c7e959, type: 3}
   RandomSfx: []
   TestButton: 0
   TestStopButton: 0
@@ -3122,6 +3221,7 @@ GameObject:
   m_Component:
   - component: {fileID: 865629097}
   - component: {fileID: 865629098}
+  - component: {fileID: 865629099}
   m_Layer: 0
   m_Name: AttemptMadeFeedback
   m_TagString: Untagged
@@ -3156,7 +3256,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 841b72de2996c5c40bfb394f3d0e0a98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Feedbacks: []
+  Feedbacks:
+  - {fileID: 865629099}
   InitializationMode: 2
   SafeMode: 3
   Direction: 0
@@ -3225,6 +3326,54 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   DebugActive: 0
+--- !u!114 &865629099
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 865629096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c2ce51367856bd49b72678cc4263225, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Active: 1
+  Label: Sound
+  Chance: 100
+  Timing:
+    TimescaleMode: 0
+    ExcludeFromHoldingPauses: 0
+    ContributeToTotalDuration: 1
+    InitialDelay: 0
+    CooldownDuration: 0
+    InterruptsOnStop: 1
+    NumberOfRepeats: 0
+    RepeatForever: 0
+    DelayBetweenRepeats: 1
+    MMFeedbacksDirectionCondition: 0
+    PlayDirection: 0
+    ConstantIntensity: 0
+    UseIntensityInterval: 0
+    IntensityIntervalMin: 0
+    IntensityIntervalMax: 0
+    Sequence: {fileID: 0}
+    TrackID: 0
+    Quantized: 0
+    TargetBPM: 120
+  DebugActive: 0
+  Sfx: {fileID: 8300000, guid: 178bcdfca7b915d488b3b3b3f2ef7b2b, type: 3}
+  RandomSfx: []
+  TestButton: 0
+  TestStopButton: 0
+  PlayMethod: 2
+  PoolSize: 10
+  MinVolume: 1
+  MaxVolume: 1
+  MinPitch: 1
+  MaxPitch: 1
+  SfxAudioMixerGroup: {fileID: 0}
+  Priority: 128
 --- !u!1001 &891216468
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4162,7 +4311,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1261398802}
-  m_LocalRotation: {x: 0.11117929, y: 0.8782944, z: -0.3931112, w: 0.24839829}
+  m_LocalRotation: {x: 0.111179285, y: 0.8782944, z: -0.3931112, w: 0.24839827}
   m_LocalPosition: {x: -4.15, y: 8.97, z: 6.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
