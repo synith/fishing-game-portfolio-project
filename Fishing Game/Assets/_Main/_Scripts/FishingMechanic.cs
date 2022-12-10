@@ -30,6 +30,8 @@ public class FishingMechanic : MonoBehaviour
     [SerializeField] MMFeedbacks AttemptPossibleFeedback;
     [SerializeField] MMFeedbacks AttemptMadeFeedback;
     [SerializeField] MMFeedbacks AttemptFailedFeedback;
+    [SerializeField] MMFeedbacks FishingStartedFeedback;
+    [SerializeField] MMFeedbacks FishCaughtFeedback;    
 
     const float TARGET_ZONE_RADIUS = 1f;
     const float TARGET_ZONE_THICKNESS = 0.7f;
@@ -136,6 +138,8 @@ public class FishingMechanic : MonoBehaviour
         isShrinking = true;
         StartCoroutine(nameof(ShowAttemptPossible));
 
+        FishingStartedFeedback?.PlayFeedbacks();
+
         OnFishingStart?.Invoke(this, EventArgs.Empty);
     }
 
@@ -158,6 +162,11 @@ public class FishingMechanic : MonoBehaviour
         AttemptMadeFeedback?.PlayFeedbacks();
 
         bool isFishCaught = IsAttemptPossible();
+
+        if (isFishCaught)
+        {
+            FishCaughtFeedback?.PlayFeedbacks();
+        }
         OnFishAttempt?.Invoke(this, isFishCaught);
     }
 
@@ -170,7 +179,6 @@ public class FishingMechanic : MonoBehaviour
 
         SetDifficulty(difficulty);
         HandleZoneColor();
-
         OnFishingRestart?.Invoke(this, EventArgs.Empty);
     }
 
