@@ -50,14 +50,13 @@ MonoBehaviour:
   insideRing: {fileID: 4489309679587649971}
   outsideRing: {fileID: 4489309679460524340}
   zoneVisual: {fileID: 77446290264357310}
-  radius: 3
-  thickness: 1
   zoneSpriteRenderer: {fileID: 3937856852441781290}
 --- !u!1001 &4848351228905708737
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 8457524232373604479}
     m_Modifications:
     - target: {fileID: 2716230310097218755, guid: 772d208660cd43f4e97972063fd9660c,
@@ -151,6 +150,9 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 772d208660cd43f4e97972063fd9660c, type: 3}
 --- !u!114 &77446290264357310 stripped
 MonoBehaviour:
@@ -181,6 +183,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 8457524232373604479}
     m_Modifications:
     - target: {fileID: 5409406050466609742, guid: 72cb608403a67ab488cee0431002c35c,
@@ -269,6 +272,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 72cb608403a67ab488cee0431002c35c, type: 3}
 --- !u!4 &4489309679460524331 stripped
 Transform:
@@ -293,6 +299,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 8457524232373604479}
     m_Modifications:
     - target: {fileID: 5409406050466609742, guid: 72cb608403a67ab488cee0431002c35c,
@@ -386,6 +393,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 72cb608403a67ab488cee0431002c35c, type: 3}
 --- !u!4 &4489309679587649964 stripped
 Transform:
