@@ -14,6 +14,8 @@ Fishing Game/[Aa]ssets/Feel/
 Fishing Game/[Aa]ssets/Feel.meta
 Fishing Game/[Aa]ssets/Hovl Studio/
 Fishing Game/[Aa]ssets/Hovl Studio.meta
+Fishing Game/[Aa]ssets/_Main/Third Party/
+Fishing Game/[Aa]ssets/_Main/Third Party.meta
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
