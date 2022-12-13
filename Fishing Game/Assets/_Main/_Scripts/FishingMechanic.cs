@@ -83,7 +83,7 @@ public class FishingMechanic : MonoBehaviour
     }
     void Start()
     {
-        FishSO startingFish = FishTracker.Instance.ActiveFish;
+        FishSO startingFish = FishTracker.Instance.GetActiveFish();
         SetDifficultyListFromFish(startingFish);
 
         _startingColor = _targetZone.GetColor();
@@ -145,7 +145,10 @@ public class FishingMechanic : MonoBehaviour
                 // fish is caught
                 HandleZoneColor();
                 FishCaughtFeedback?.PlayFeedbacks();
-                FishTracker.Instance.SetRandomFishActive();
+
+                FishSO fish = FishTracker.Instance.GetActiveFish();
+
+                FishTracker.Instance.RecordFishCaught(fish);
             }
             else if (IsPlayerInsideZone())
             {

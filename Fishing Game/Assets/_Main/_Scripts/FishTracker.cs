@@ -9,13 +9,14 @@ public class FishTracker : MonoBehaviour
     public static FishTracker Instance { get; private set; }
 
     public event Action<FishSO> OnActiveFishChanged;
+    public event Action OnAllFishCaught;
 
     List<FishSO> _availableFishList;
     List<FishSO> _caughtFishList;
 
     [SerializeField] FishListSO fishTier1;
 
-    public FishSO ActiveFish { get; private set; }
+    FishSO activeFish;
 
     void Awake()
     {
@@ -26,13 +27,21 @@ public class FishTracker : MonoBehaviour
         }
         Instance = this;
 
-        _availableFishList = fishTier1.list;
+        _caughtFishList = new List<FishSO>();
+        _availableFishList = new List<FishSO>();
+
+        foreach (FishSO fish in fishTier1.list)
+        {
+            _availableFishList.Add(fish);
+        }
         SetRandomFishActive();
     }
 
 
     public void SetRandomFishActive()
     {
+        if (IsAvailableFishListEmpty()) return;
+
         FishSO randomFish = GetRandomAvailableFish();
         SetActiveFish(randomFish);
     }
@@ -40,22 +49,42 @@ public class FishTracker : MonoBehaviour
     FishSO GetRandomAvailableFish()
     {
         int index = Random.Range(0, _availableFishList.Count);
-        FishSO fish = _availableFishList[index];        
+        FishSO fish = _availableFishList[index];
 
         return fish;
     }
 
-    void RecordFishCaught(FishSO fish)
+    public void RecordFishCaught(FishSO fish)
     {
+        if (IsAvailableFishListEmpty())
+        {
+            return;
+        }
+
+        Debug.Log($"Caught Fish: {fish}");
         _availableFishList.Remove(fish);
         _caughtFishList.Add(fish);
+
+        if (IsAvailableFishListEmpty())
+        {
+            Debug.Log("YOU WIN!!!!");
+            OnAllFishCaught?.Invoke();
+            return;
+        }
+
+        foreach (var item in _availableFishList)
+        {
+            Debug.Log(item.name);
+        }
     }
+
+    bool IsAvailableFishListEmpty() => _availableFishList.Count == 0;
 
     void SetActiveFish(FishSO fish)
     {
-        ActiveFish = fish;
+        activeFish = fish;
         OnActiveFishChanged?.Invoke(fish);
     }
 
-    FishSO GetActiveFish() => ActiveFish;
+    public FishSO GetActiveFish() => activeFish;
 }
