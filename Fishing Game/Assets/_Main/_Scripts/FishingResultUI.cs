@@ -33,10 +33,10 @@ public class FishingResultUI : MonoBehaviour
         resultText.SetText("Fishing...");
     }
 
-    private void FishingMechanic_OnFishAction(object sender, bool e)
+    private void FishingMechanic_OnFishAction(bool isAttemptPossible, bool isLastFishingDifficulty)
     {
-        string result = e ? "Success!" : "Failed...";
-        string restart = "Press R to Restart";
+        string result = isAttemptPossible ? isLastFishingDifficulty ? "Success!" : "Trying Again..." : "Failed";
+        string restart = isAttemptPossible ? isLastFishingDifficulty? "Press R to Restart" : "" : "Press R to Restart";
         resultText.SetText(result + "\n" + restart);
     }
 }
