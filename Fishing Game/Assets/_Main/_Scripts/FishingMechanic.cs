@@ -14,23 +14,23 @@ public class FishingMechanic : MonoBehaviour
     public static event EventHandler OnFishingRestart;
     public static event EventHandler<Difficulty> OnDifficultyChanged;
 
-    [SerializeField] Zone playerZone;
-    [SerializeField] Zone targetZone;
+    [SerializeField] Zone _playerZone;
+    [SerializeField] Zone _targetZone;
 
-    [SerializeField] Color insideZoneColor;
-    [SerializeField] Color outsideZoneColor;
-
-    [SerializeField] float shrinkRate = 1;
-
-    [SerializeField, Range(2.5f, 6f)] float easyStartRadius = 6f;
-    [SerializeField, Range(2.5f, 6f)] float mediumStartRadius = 4.5f;
-    [SerializeField, Range(2.5f, 6f)] float hardStartRadius = 3f;
+    [SerializeField] Color _insideZoneColor;
+    [SerializeField] Color _outsideZoneColor;
 
     [SerializeField] MMFeedbacks AttemptPossibleFeedback;
     [SerializeField] MMFeedbacks AttemptMadeFeedback;
     [SerializeField] MMFeedbacks AttemptFailedFeedback;
     [SerializeField] MMFeedbacks FishingStartedFeedback;
     [SerializeField] MMFeedbacks FishCaughtFeedback;
+
+    const float SHRINK_RATE = 5;
+
+    const float EASY_START_RADIUS = 6f;
+    const float MEDIUM_START_RADIUS = 4.5f;
+    const float HARD_START_RADIUS = 3f;
 
     const float TARGET_ZONE_RADIUS = 1f;
     const float TARGET_ZONE_THICKNESS = 0.7f;
@@ -46,165 +46,63 @@ public class FishingMechanic : MonoBehaviour
     bool hasAttempted;
     #endregion
 
-    private void Awake()
-    {
-        difficultyList = new List<Difficulty>();
-    }
-
-    void Start()
-    {
-        FishSO startingFish = FishTracker.Instance.ActiveFish;
-        ConfigureDifficultyList(startingFish);
-
-        startingColor = targetZone.GetColor();
-
-        FishTracker.Instance.OnActiveFishChanged += FishTracker_OnActiveFishChanged;
-    }
-
-    private void ConfigureDifficultyList(FishSO fish)
-    {
-        difficultyList.Clear();
-
-        foreach (Difficulty difficulty in fish.difficultyList)
-        {
-            difficultyList.Add(difficulty);
-        }
-
-        Debug.Log($"Difficulty for Fish: {fish}");
-        for (int i = 0; i < difficultyList.Count; i++)
-        {
-            Debug.Log($"Difficulty {i} : {difficultyList[i]}");
-        }
-
-        currentDifficulty = GetNextDifficultyInList();
-        SetDifficulty(currentDifficulty);
-        SetTargetZone();
-    }
-
-    private void FishTracker_OnActiveFishChanged(FishSO fish)
-    {
-        ConfigureDifficultyList(fish);
-    }
-
-    Difficulty GetNextDifficultyInList()
-    {
-        Difficulty difficulty = difficultyList[0];
-        return difficulty;
-    }
-
-    void Update()
-    {
-        HandleShrinkingPlayerZone();
-    }
-
     #region Event Subscription
     void OnEnable()
     {
-        FishingControls.Instance.OnFishAttempt += FishingControls_OnFishAttempt;
-        FishingControls.Instance.OnDebugTest += FishingControls_OnDebugTest;
-        FishingControls.Instance.OnDebugRestart += FishingControls_OnDebugRestart;
+        FishingControls.Instance.OnFishAttemptPressed += FishingControls_OnFishAttempt;
+        FishingControls.Instance.OnDebugTestPressed += FishingControls_OnDebugTest;
+        FishingControls.Instance.OnDebugRestartPressed += FishingControls_OnDebugRestart;
 
-        OnFishAttempt += HandleFishingAttempt;
+        FishTracker.Instance.OnActiveFishChanged += FishTracker_OnActiveFishChanged;
     }
-
-    void HandleFishingAttempt(bool isPossible, bool isLastDifficulty)
+    void OnDisable()
     {
+        FishingControls.Instance.OnFishAttemptPressed -= FishingControls_OnFishAttempt;
+        FishingControls.Instance.OnDebugTestPressed -= FishingControls_OnDebugTest;
+        FishingControls.Instance.OnDebugRestartPressed -= FishingControls_OnDebugRestart;
 
-        if (isPossible && isLastDifficulty)
-        {
-            HandleZoneColor();
-            FishCaughtFeedback?.PlayFeedbacks();
-            FishTracker.Instance.SetRandomFishActive();
-
-
-            print("SUCCEED!");
-        }
-        if (isPossible && !isLastDifficulty)
-        {
-            difficultyList.Remove(currentDifficulty);
-
-
-            currentDifficulty = GetNextDifficultyInList();
-
-            
-            RestartFishing(currentDifficulty);
-
-
-
-            Invoke(nameof(StartFishing), 1.5f);
-            print("AGAIN!");
-            
-        }
-        if (!isPossible)
-        {
-            AttemptFailedFeedback?.PlayFeedbacks();
-            HandleZoneColor();
-
-            hasAttempted = true;
-
-            FishTracker.Instance.SetRandomFishActive();
-            currentDifficulty = GetNextDifficultyInList();
-
-
-            // RestartFishing(currentDifficulty);
-
-            print("FAIL");
-            
-        }
-
-
+        FishTracker.Instance.OnActiveFishChanged -= FishTracker_OnActiveFishChanged;
     }
-
     void FishingControls_OnFishAttempt(object sender, EventArgs e) => AttemptToCatchFish();
     void FishingControls_OnDebugTest(object sender, EventArgs e) => StartFishing();
     void FishingControls_OnDebugRestart(object sender, EventArgs e) => RestartFishing(currentDifficulty);
+    void FishTracker_OnActiveFishChanged(FishSO fish) => SetDifficultyListFromFish(fish);
 
-    void OnDisable()
-    {
-        FishingControls.Instance.OnFishAttempt -= FishingControls_OnFishAttempt;
-        FishingControls.Instance.OnDebugTest -= FishingControls_OnDebugTest;
-        FishingControls.Instance.OnDebugRestart -= FishingControls_OnDebugRestart;
-
-        OnFishAttempt -= HandleFishingAttempt;
-    }
     #endregion
 
-
-    void SetDifficulty(Difficulty difficulty)
+    void Awake()
     {
-        currentDifficulty = difficulty;
-
-        float startRadius = GetStartRadius(difficulty);
-        currentRadius = startRadius;
-
-        playerZone.SetZone(startRadius, PLAYER_ZONE_THICKNESS);
-
-        OnDifficultyChanged?.Invoke(this, difficulty);
+        difficultyList = new List<Difficulty>();
     }
-
-    void SetTargetZone(int handicap = 0)
+    void Start()
     {
-        handicap = Mathf.Clamp(handicap, 0, 4);
-        float thickness = TARGET_ZONE_THICKNESS;
-        // TODO: increase thickness based on handicap
-        targetZone.SetZone(TARGET_ZONE_RADIUS, thickness);
+        FishSO startingFish = FishTracker.Instance.ActiveFish;
+        SetDifficultyListFromFish(startingFish);
+
+        startingColor = _targetZone.GetColor();
     }
-
-    void HandleShrinkingPlayerZone()
+    void Update()
     {
-        if (!isShrinking) return;
+        HandleShrinkingPlayerZone();
 
-        if (HasPlayerZoneReachedEnd())
+        void HandleShrinkingPlayerZone()
         {
-            AttemptToCatchFish();
-            return;
+            if (!isShrinking) return;
+
+            if (IsPlayerTooFarInside())
+            {
+                // Player took too long to press button
+                AttemptToCatchFish();
+                return;
+            }
+
+            currentRadius -= SHRINK_RATE * Time.deltaTime;
+
+            _playerZone.SetZone(currentRadius, PLAYER_ZONE_THICKNESS);
+            HandleZoneColor();
         }
-
-        currentRadius -= shrinkRate * Time.deltaTime;
-
-        playerZone.SetZone(currentRadius, PLAYER_ZONE_THICKNESS);
-        HandleZoneColor();
     }
+
     void StartFishing()
     {
         if (hasAttempted) return;
@@ -213,18 +111,11 @@ public class FishingMechanic : MonoBehaviour
         StartCoroutine(nameof(ShowAttemptPossible));
 
         FishingStartedFeedback?.PlayFeedbacks();
-
         OnFishingStart?.Invoke(this, EventArgs.Empty);
 
         HandleZoneColor();
-    }
 
-    IEnumerator ShowAttemptPossible()
-    {
-        yield return new WaitUntil(() => IsAttemptPossible());
-        AttemptPossibleFeedback?.PlayFeedbacks();
     }
-
     void AttemptToCatchFish()
     {
         if (hasAttempted || !isShrinking) return;
@@ -234,14 +125,51 @@ public class FishingMechanic : MonoBehaviour
 
         StopCoroutine(nameof(ShowAttemptPossible));
         AttemptMadeFeedback?.PlayFeedbacks();
-        
+
 
         bool isAttemptPossible = IsAttemptPossible();
         bool isFishOnLastDifficulty = difficultyList.Count == 1;
 
-        OnFishAttempt?.Invoke(isAttemptPossible, isFishOnLastDifficulty);       
-    }
+        TryCatchFish(isAttemptPossible, isFishOnLastDifficulty);
+        OnFishAttempt?.Invoke(isAttemptPossible, isFishOnLastDifficulty);
 
+        void TryCatchFish(bool isPossible, bool isLastDifficulty)
+        {
+            if (isPossible && isLastDifficulty)
+            {
+                // fish is caught
+                HandleZoneColor();
+                FishCaughtFeedback?.PlayFeedbacks();
+                FishTracker.Instance.SetRandomFishActive();
+            }
+            if (isPossible && !isLastDifficulty)
+            {
+                // needs more attempts
+                difficultyList.Remove(currentDifficulty);
+
+                currentDifficulty = GetNextDifficultyInList();
+
+                RestartFishing(currentDifficulty);
+
+                Invoke(nameof(StartFishing), 1.5f);
+            }
+            if (!isPossible)
+            {
+                // failed
+                AttemptFailedFeedback?.PlayFeedbacks();
+                HandleZoneColor();
+
+                hasAttempted = true;
+
+                FishTracker.Instance.SetRandomFishActive();
+                currentDifficulty = GetNextDifficultyInList();
+
+                // RestartFishing(currentDifficulty);
+
+                print("FAIL");
+            }
+        }
+    }
     void RestartFishing(Difficulty difficulty)
     {
         if (!hasAttempted) return;
@@ -249,69 +177,96 @@ public class FishingMechanic : MonoBehaviour
         isShrinking = false;
         hasAttempted = false;
 
-        SetDifficulty(difficulty);    
+        SetDifficulty(difficulty);
 
         OnFishingRestart?.Invoke(this, EventArgs.Empty);
     }
 
-    int GetHandicap(int rodLevel, int fishLevel)
+    IEnumerator ShowAttemptPossible()
     {
-        int handicap = rodLevel - fishLevel;
-        return handicap < 0 ? 0 : handicap;
+        yield return new WaitUntil(() => IsAttemptPossible());
+        AttemptPossibleFeedback?.PlayFeedbacks();
     }
 
-    float GetStartRadius(Difficulty difficulty)
-    {
-        switch (difficulty)
-        {
-            case Difficulty.Easy: return easyStartRadius;
-            case Difficulty.Medium: return mediumStartRadius;
-            case Difficulty.Hard: return hardStartRadius;
-            default: return easyStartRadius;
-        }
-    }
 
-    bool HasPlayerZoneReachedEnd() => playerZone.GetOutsideRingRadius() < targetZone.GetInsideRingRadius();
-    bool HasNotStarted() => !isShrinking && !hasAttempted;
 
+    
     void HandleZoneColor()
     {
         if (IsAttemptPossible())
         {
-            targetZone.SetColor(insideZoneColor);
+            _targetZone.SetColor(_insideZoneColor);
             return;
         }
-        else if (HasPlayerZoneReachedEnd())
+        else if (IsPlayerTooFarInside())
         {
-            targetZone.SetColor(outsideZoneColor);
+            _targetZone.SetColor(_outsideZoneColor);
             return;
         }
-        else if (HasNotStarted())
+        else if (IsNotStarted())
         {
-            targetZone.SetColor(startingColor);
+            _targetZone.SetColor(startingColor);
             return;
         }
         else if (!isShrinking && !IsAttemptPossible())
         {
-            targetZone.SetColor(outsideZoneColor);
+            _targetZone.SetColor(_outsideZoneColor);
             return;
         }
-        targetZone.SetColor(startingColor);
+        _targetZone.SetColor(startingColor);
     }
+
+    void SetDifficultyListFromFish(FishSO fish)
+    {
+        difficultyList.Clear();
+
+        foreach (Difficulty difficulty in fish.difficultyList)
+        {
+            difficultyList.Add(difficulty);
+        }
+
+        currentDifficulty = GetNextDifficultyInList();
+        SetDifficulty(currentDifficulty);
+        _targetZone.SetZone(TARGET_ZONE_RADIUS, TARGET_ZONE_THICKNESS);
+    }
+    void SetDifficulty(Difficulty difficulty)
+    {
+        currentDifficulty = difficulty;
+
+        float startRadius = GetStartRadiusForDifficulty(difficulty);
+        currentRadius = startRadius;
+
+        _playerZone.SetZone(startRadius, PLAYER_ZONE_THICKNESS);
+
+        OnDifficultyChanged?.Invoke(this, difficulty);
+
+        float GetStartRadiusForDifficulty(Difficulty difficulty)
+        {
+            switch (difficulty)
+            {
+                case Difficulty.Easy: return EASY_START_RADIUS;
+                case Difficulty.Medium: return MEDIUM_START_RADIUS;
+                case Difficulty.Hard: return HARD_START_RADIUS;
+                default: return EASY_START_RADIUS;
+            }
+        }
+    }
+
+    Difficulty GetNextDifficultyInList()
+    {
+        Difficulty difficulty = difficultyList[0];
+        return difficulty;
+    }
+
 
     bool IsAttemptPossible()
     {
-        if (playerZone.GetOutsideRingRadius() < targetZone.GetInsideRingRadius())
-        {
-            return false;
-        }
-        else if (playerZone.GetInsideRingRadius() > targetZone.GetOutsideRingRadius())
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        if (IsPlayerTooFarInside()) return false;
+        if (IsPlayerTooFarOutside()) return false;
+
+        return true;
     }
+    bool IsPlayerTooFarInside() => _playerZone.GetOutsideRingRadius() < _targetZone.GetInsideRingRadius();
+    bool IsPlayerTooFarOutside() => _playerZone.GetInsideRingRadius() > _targetZone.GetOutsideRingRadius();
+    bool IsNotStarted() => !isShrinking && !hasAttempted;
 }

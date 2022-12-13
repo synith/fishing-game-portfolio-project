@@ -10,12 +10,19 @@ public class FishingResultUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI resultText;
     [SerializeField] TextMeshProUGUI difficultyText;
 
-    private void Start()
+    private void OnEnable()
     {
         FishingMechanic.OnFishAttempt += FishingMechanic_OnFishAction;
         FishingMechanic.OnFishingStart += FishingMechanic_OnFishingStart;
         FishingMechanic.OnFishingRestart += FishingMechanic_OnFishingRestart;
         FishingMechanic.OnDifficultyChanged += FishingMechanic_OnDifficultyChanged;
+    }
+    private void OnDisable()
+    {
+        FishingMechanic.OnFishAttempt -= FishingMechanic_OnFishAction;
+        FishingMechanic.OnFishingStart -= FishingMechanic_OnFishingStart;
+        FishingMechanic.OnFishingRestart -= FishingMechanic_OnFishingRestart;
+        FishingMechanic.OnDifficultyChanged -= FishingMechanic_OnDifficultyChanged;
     }
 
     private void FishingMechanic_OnDifficultyChanged(object sender, FishingMechanic.Difficulty e)
