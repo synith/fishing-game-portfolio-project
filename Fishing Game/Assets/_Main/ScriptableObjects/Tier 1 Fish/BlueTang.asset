@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BlueTang
   m_EditorClassIdentifier: 
   Model: {fileID: -8679921383154817045, guid: 54808815d07b96f4b825f3463152ecc4, type: 3}
-  difficultyList: 000000000100000002000000
+  difficultyList: 0100000001000000

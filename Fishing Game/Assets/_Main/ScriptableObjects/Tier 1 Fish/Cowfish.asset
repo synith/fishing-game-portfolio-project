@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Cowfish
   m_EditorClassIdentifier: 
   Model: {fileID: -8679921383154817045, guid: 5d19fc9d3e8b6934fb2017f62663dd94, type: 3}
-  difficultyList: 010000000200000000000000
+  difficultyList: 020000000100000000000000
