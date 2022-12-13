@@ -6,10 +6,10 @@ public class FishingControls : MonoBehaviour
 {
     public static FishingControls Instance { get; private set; }
 
-    public event EventHandler OnFishAttempt;
+    public event EventHandler OnFishAttemptPressed;
 
-    public event EventHandler OnDebugTest;
-    public event EventHandler OnDebugRestart;
+    public event EventHandler OnDebugTestPressed;
+    public event EventHandler OnDebugRestartPressed;
 
     FishingInputActions fishingInputActions;
 
@@ -41,19 +41,19 @@ public class FishingControls : MonoBehaviour
     private void Restart_performed(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-        OnDebugRestart?.Invoke(this, EventArgs.Empty);
+        OnDebugRestartPressed?.Invoke(this, EventArgs.Empty);
     }
 
     private void Test_performed(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-        OnDebugTest?.Invoke(this, EventArgs.Empty);
+        OnDebugTestPressed?.Invoke(this, EventArgs.Empty);
     }
 
     void FishAttempt_Performed(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-        OnFishAttempt?.Invoke(this, EventArgs.Empty);
+        OnFishAttemptPressed?.Invoke(this, EventArgs.Empty);
     }
 
     void OnDisable()
