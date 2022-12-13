@@ -25,13 +25,11 @@ public class FishTracker : MonoBehaviour
             return;
         }
         Instance = this;
-    }
 
-    void Start()
-    {
         availableFishList = fishTier1.list;
         SetRandomFishActive();
     }
+
 
     public void SetRandomFishActive()
     {

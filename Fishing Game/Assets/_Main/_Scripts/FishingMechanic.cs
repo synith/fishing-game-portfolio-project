@@ -14,7 +14,8 @@ public class FishingMechanic : MonoBehaviour
     public static event EventHandler OnFishingRestart;
     public static event EventHandler<Difficulty> OnDifficultyChanged;
 
-    [SerializeField] Difficulty difficulty;
+    List<Difficulty> difficultyList;
+    Difficulty currentDifficulty;
     [SerializeField] Zone playerZone;
     [SerializeField] Zone targetZone;
 
@@ -46,11 +47,18 @@ public class FishingMechanic : MonoBehaviour
 
     void Start()
     {
-        SetDifficulty(difficulty);
+        difficultyList = GetDifficultyListFromActiveFish();
+        currentDifficulty = GetNextDifficultyInList();
+        SetDifficulty(currentDifficulty);
         SetTargetZone();
+
+        
 
         startingColor = targetZone.GetColor();
     }
+
+    Difficulty GetNextDifficultyInList() => difficultyList[0];
+    List<Difficulty> GetDifficultyListFromActiveFish() => FishTracker.Instance.ActiveFish.difficultyList;
 
     void Update()
     {
@@ -84,7 +92,7 @@ public class FishingMechanic : MonoBehaviour
 
     void FishingControls_OnFishAttempt(object sender, EventArgs e) => AttemptToCatchFish();
     void FishingControls_OnDebugTest(object sender, EventArgs e) => StartFishing();
-    void FishingControls_OnDebugRestart(object sender, EventArgs e) => RestartFishing(difficulty);
+    void FishingControls_OnDebugRestart(object sender, EventArgs e) => RestartFishing(currentDifficulty);
 
     void OnDisable()
     {
@@ -98,7 +106,7 @@ public class FishingMechanic : MonoBehaviour
 
     void SetDifficulty(Difficulty difficulty)
     {
-        this.difficulty = difficulty;
+        currentDifficulty = difficulty;
 
         float startRadius = GetStartRadius(difficulty);
         currentRadius = startRadius;
@@ -146,9 +154,7 @@ public class FishingMechanic : MonoBehaviour
     IEnumerator ShowAttemptPossible()
     {
         yield return new WaitUntil(() => IsAttemptPossible());
-
         AttemptPossibleFeedback?.PlayFeedbacks();
-        print("IN THE ZONE!");
     }
 
     void AttemptToCatchFish()
