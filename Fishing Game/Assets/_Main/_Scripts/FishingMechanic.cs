@@ -7,6 +7,7 @@ using UnityEngine;
 public class FishingMechanic : MonoBehaviour
 {
     #region Variables
+
     public enum Difficulty { Easy, Medium, Hard };
 
     public static event Action<bool, bool> OnFishAttempt;
@@ -44,9 +45,13 @@ public class FishingMechanic : MonoBehaviour
     float _currentRadius;
     bool _isShrinking;
     bool _hasAttempted;
+
     #endregion
 
+
+
     #region Event Subscription
+
     void OnEnable()
     {
         FishingControls.Instance.OnFishAttemptPressed += FishingControls_OnFishAttempt;
@@ -69,6 +74,8 @@ public class FishingMechanic : MonoBehaviour
     void FishTracker_OnActiveFishChanged(FishSO fish) => SetDifficultyListFromFish(fish);
 
     #endregion
+
+
 
     void Awake()
     {
@@ -114,7 +121,6 @@ public class FishingMechanic : MonoBehaviour
         OnFishingStart?.Invoke(this, EventArgs.Empty);
 
         HandleZoneColor();
-
     }
     void AttemptToCatchFish()
     {
@@ -126,23 +132,22 @@ public class FishingMechanic : MonoBehaviour
         StopCoroutine(nameof(ShowAttemptPossible));
         AttemptMadeFeedback?.PlayFeedbacks();
 
+        bool isAttemptPossible = IsPlayerInsideZone();
+        bool isFishOnLastDifficulty = IsFishOnLastDifficulty();
 
-        bool isAttemptPossible = IsAttemptPossible();
-        bool isFishOnLastDifficulty = _difficultyList.Count == 1;
-
-        TryCatchFish(isAttemptPossible, isFishOnLastDifficulty);
+        TryCatchFish();
         OnFishAttempt?.Invoke(isAttemptPossible, isFishOnLastDifficulty);
 
-        void TryCatchFish(bool isPossible, bool isLastDifficulty)
+        void TryCatchFish()
         {
-            if (isPossible && isLastDifficulty)
+            if (IsFishCaught())
             {
                 // fish is caught
                 HandleZoneColor();
                 FishCaughtFeedback?.PlayFeedbacks();
                 FishTracker.Instance.SetRandomFishActive();
             }
-            if (isPossible && !isLastDifficulty)
+            else if (IsPlayerInsideZone())
             {
                 // needs more attempts
                 _difficultyList.Remove(_currentDifficulty);
@@ -153,7 +158,7 @@ public class FishingMechanic : MonoBehaviour
 
                 Invoke(nameof(StartFishing), 1.5f);
             }
-            if (!isPossible)
+            else
             {
                 // failed
                 AttemptFailedFeedback?.PlayFeedbacks();
@@ -184,13 +189,13 @@ public class FishingMechanic : MonoBehaviour
 
     IEnumerator ShowAttemptPossible()
     {
-        yield return new WaitUntil(() => IsAttemptPossible());
+        yield return new WaitUntil(() => IsPlayerInsideZone());
         AttemptPossibleFeedback?.PlayFeedbacks();
     }
     
     void HandleZoneColor()
     {
-        if (IsAttemptPossible())
+        if (IsPlayerInsideZone())
         {
             _targetZone.SetColor(_insideZoneColor);
             return;
@@ -205,7 +210,7 @@ public class FishingMechanic : MonoBehaviour
             _targetZone.SetColor(_startingColor);
             return;
         }
-        else if (!_isShrinking && !IsAttemptPossible())
+        else if (!_isShrinking && !IsPlayerInsideZone())
         {
             _targetZone.SetColor(_outsideZoneColor);
             return;
@@ -255,14 +260,9 @@ public class FishingMechanic : MonoBehaviour
         return difficulty;
     }
 
-
-    bool IsAttemptPossible()
-    {
-        if (IsPlayerTooFarInside()) return false;
-        if (IsPlayerTooFarOutside()) return false;
-
-        return true;
-    }
+    bool IsFishCaught() => IsPlayerInsideZone() && IsFishOnLastDifficulty();
+    bool IsFishOnLastDifficulty() => _difficultyList.Count == 1;
+    bool IsPlayerInsideZone() => !IsPlayerTooFarInside() && !IsPlayerTooFarOutside();
     bool IsPlayerTooFarInside() => _playerZone.GetOutsideRingRadius() < _targetZone.GetInsideRingRadius();
     bool IsPlayerTooFarOutside() => _playerZone.GetInsideRingRadius() > _targetZone.GetOutsideRingRadius();
     bool IsNotStarted() => !_isShrinking && !_hasAttempted;
