@@ -7,8 +7,9 @@ using UnityEngine.UI;
 
 public class FishingResultUI : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI resultText;
-    [SerializeField] TextMeshProUGUI difficultyText;
+    [SerializeField] TextMeshProUGUI _resultText;
+    [SerializeField] TextMeshProUGUI _difficultyText;
+    //[SerializeField] Transform _gameOverScreen;
 
     private void OnEnable()
     {
@@ -16,34 +17,42 @@ public class FishingResultUI : MonoBehaviour
         FishingMechanic.OnFishingStart += FishingMechanic_OnFishingStart;
         FishingMechanic.OnFishingRestart += FishingMechanic_OnFishingRestart;
         FishingMechanic.OnDifficultyChanged += FishingMechanic_OnDifficultyChanged;
+        FishTracker.Instance.OnAllFishCaught += FishTracker_OnAllFishCaught;
     }
+
+    private void FishTracker_OnAllFishCaught()
+    {
+        // TODO: Show game over screen
+    }
+
     private void OnDisable()
     {
         FishingMechanic.OnFishAttempt -= FishingMechanic_OnFishAction;
         FishingMechanic.OnFishingStart -= FishingMechanic_OnFishingStart;
         FishingMechanic.OnFishingRestart -= FishingMechanic_OnFishingRestart;
         FishingMechanic.OnDifficultyChanged -= FishingMechanic_OnDifficultyChanged;
+        FishTracker.Instance.OnAllFishCaught -= FishTracker_OnAllFishCaught;
     }
 
     private void FishingMechanic_OnDifficultyChanged(object sender, FishingMechanic.Difficulty e)
     {
-        difficultyText.SetText(e.ToString());
+        _difficultyText.SetText(e.ToString());
     }
 
     private void FishingMechanic_OnFishingRestart(object sender, EventArgs e)
     {
-        resultText.SetText("Press T to test Fishing Mechanic");
+        _resultText.SetText("Press T to Cast");
     }
 
     private void FishingMechanic_OnFishingStart(object sender, EventArgs e)
     {
-        resultText.SetText("Fishing...");
+        _resultText.SetText("Fishing...");
     }
 
     private void FishingMechanic_OnFishAction(bool isAttemptPossible, bool isLastFishingDifficulty)
     {
-        string result = isAttemptPossible ? isLastFishingDifficulty ? "Success!" : "Trying Again..." : "Failed";
+        string result = isAttemptPossible ? isLastFishingDifficulty ? "Success!" : "Keep Going!" : "Failed";
         string restart = isAttemptPossible ? isLastFishingDifficulty? "Press R to Restart" : "" : "Press R to Restart";
-        resultText.SetText(result + "\n" + restart);
+        _resultText.SetText(result + "\n" + restart);
     }
 }

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Clownfish
   m_EditorClassIdentifier: 
   Model: {fileID: -8679921383154817045, guid: 8baf99832525b984fbaeab146f9e6063, type: 3}
-  difficultyList: 000000000200000000000000
+  difficultyList: 0000000002000000
