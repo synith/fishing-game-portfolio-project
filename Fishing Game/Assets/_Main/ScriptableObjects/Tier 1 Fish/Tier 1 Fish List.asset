@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bcc00a1d21cff04aa71132f975aec1d, type: 3}
+  m_Name: Tier 1 Fish List
+  m_EditorClassIdentifier: 
+  list:
+  - {fileID: 11400000, guid: 20f63c98917570642aa09f13e937e247, type: 2}
+  - {fileID: 11400000, guid: ef9437e3b2cfb0f42953ed783ccd5fc2, type: 2}
+  - {fileID: 11400000, guid: 64f7dd28add33974ab173da5672eccde, type: 2}
+  - {fileID: 11400000, guid: 4f96fb1bc376b4046930b99bd21f5ce7, type: 2}
+  - {fileID: 11400000, guid: acaea85ef99912d4ca3e3c0c1aa79fb3, type: 2}
+  - {fileID: 11400000, guid: 7b07a26c81fe89b40a32bdb45661d681, type: 2}
+  - {fileID: 11400000, guid: 0d3d7e6dd500fa24ebca9b849253b39b, type: 2}
