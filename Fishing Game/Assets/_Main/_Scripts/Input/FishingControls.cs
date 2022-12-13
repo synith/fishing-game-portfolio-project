@@ -11,7 +11,7 @@ public class FishingControls : MonoBehaviour
     public event EventHandler OnDebugTestPressed;
     public event EventHandler OnDebugRestartPressed;
 
-    FishingInputActions fishingInputActions;
+    FishingInputActions _fishingInputActions;
 
     void Awake()
     {
@@ -22,20 +22,20 @@ public class FishingControls : MonoBehaviour
         }
         Instance = this;
 
-        fishingInputActions = new FishingInputActions();
+        _fishingInputActions = new FishingInputActions();
     }
 
     void OnEnable()
     {
-        fishingInputActions.Player.FishAttempt.performed += FishAttempt_Performed;
-        fishingInputActions.Player.FishAttempt.Enable();
+        _fishingInputActions.Player.FishAttempt.performed += FishAttempt_Performed;
+        _fishingInputActions.Player.FishAttempt.Enable();
 
 
-        fishingInputActions.Debug.Test.performed += Test_performed;
-        fishingInputActions.Debug.Test.Enable();
+        _fishingInputActions.Debug.Test.performed += Test_performed;
+        _fishingInputActions.Debug.Test.Enable();
 
-        fishingInputActions.Debug.Restart.performed += Restart_performed;
-        fishingInputActions.Debug.Restart.Enable();
+        _fishingInputActions.Debug.Restart.performed += Restart_performed;
+        _fishingInputActions.Debug.Restart.Enable();
     }
 
     private void Restart_performed(InputAction.CallbackContext context)
@@ -58,14 +58,14 @@ public class FishingControls : MonoBehaviour
 
     void OnDisable()
     {
-        fishingInputActions.Player.FishAttempt.performed -= FishAttempt_Performed;
-        fishingInputActions.Player.FishAttempt.Disable();
+        _fishingInputActions.Player.FishAttempt.performed -= FishAttempt_Performed;
+        _fishingInputActions.Player.FishAttempt.Disable();
 
-        fishingInputActions.Debug.Test.performed -= Test_performed;
-        fishingInputActions.Debug.Test.Disable();
+        _fishingInputActions.Debug.Test.performed -= Test_performed;
+        _fishingInputActions.Debug.Test.Disable();
 
-        fishingInputActions.Debug.Restart.performed -= Test_performed;
-        fishingInputActions.Debug.Restart.Disable();
+        _fishingInputActions.Debug.Restart.performed -= Test_performed;
+        _fishingInputActions.Debug.Restart.Disable();
     }
 
 

@@ -10,8 +10,8 @@ public class FishTracker : MonoBehaviour
 
     public event Action<FishSO> OnActiveFishChanged;
 
-    List<FishSO> availableFishList;
-    List<FishSO> caughtFishList;
+    List<FishSO> _availableFishList;
+    List<FishSO> _caughtFishList;
 
     [SerializeField] FishListSO fishTier1;
 
@@ -26,7 +26,7 @@ public class FishTracker : MonoBehaviour
         }
         Instance = this;
 
-        availableFishList = fishTier1.list;
+        _availableFishList = fishTier1.list;
         SetRandomFishActive();
     }
 
@@ -39,16 +39,16 @@ public class FishTracker : MonoBehaviour
 
     FishSO GetRandomAvailableFish()
     {
-        int index = Random.Range(0, availableFishList.Count);
-        FishSO fish = availableFishList[index];        
+        int index = Random.Range(0, _availableFishList.Count);
+        FishSO fish = _availableFishList[index];        
 
         return fish;
     }
 
     void RecordFishCaught(FishSO fish)
     {
-        availableFishList.Remove(fish);
-        caughtFishList.Add(fish);
+        _availableFishList.Remove(fish);
+        _caughtFishList.Add(fish);
     }
 
     void SetActiveFish(FishSO fish)
