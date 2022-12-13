@@ -179,6 +179,9 @@ public class FishingMechanic : MonoBehaviour
 
         SetDifficulty(difficulty);
         HandleZoneColor();
+
+        FishTracker.Instance.SetRandomFishActive();
+
         OnFishingRestart?.Invoke(this, EventArgs.Empty);
     }
 
