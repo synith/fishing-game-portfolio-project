@@ -6,4 +6,3 @@ Genre: Casual
 Objective: Catch each type of Fish
 
 ![image](https://user-images.githubusercontent.com/8266516/207529636-f38ff87c-c9bc-415e-a501-e4ab2b6a3b56.png)
-![image](https://media.discordapp.net/attachments/991816957013803049/1052466161138282547/Animation.gif)
