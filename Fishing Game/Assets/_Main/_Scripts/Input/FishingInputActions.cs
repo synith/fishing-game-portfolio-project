@@ -35,6 +35,15 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""62581adf-33d9-40b8-8567-bf4527151684"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -79,6 +88,39 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""FishAttempt"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0e49e5c2-9704-40e3-ba25-86ad7e11534b"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e0dfa31a-ed06-44fc-b2a2-91398ec7c79d"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""02d98feb-3771-4463-8cab-70301f2e14d0"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -138,6 +180,7 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_FishAttempt = m_Player.FindAction("FishAttempt", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         // Debug
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_Test = m_Debug.FindAction("Test", throwIfNotFound: true);
@@ -202,11 +245,13 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_FishAttempt;
+    private readonly InputAction m_Player_Pause;
     public struct PlayerActions
     {
         private @FishingInputActions m_Wrapper;
         public PlayerActions(@FishingInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @FishAttempt => m_Wrapper.m_Player_FishAttempt;
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -219,6 +264,9 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
                 @FishAttempt.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFishAttempt;
                 @FishAttempt.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFishAttempt;
                 @FishAttempt.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFishAttempt;
+                @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -226,6 +274,9 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
                 @FishAttempt.started += instance.OnFishAttempt;
                 @FishAttempt.performed += instance.OnFishAttempt;
                 @FishAttempt.canceled += instance.OnFishAttempt;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -274,6 +325,7 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnFishAttempt(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
     public interface IDebugActions
     {
