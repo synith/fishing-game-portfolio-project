@@ -10,6 +10,7 @@ public class FishingControls : MonoBehaviour
 
     public event EventHandler OnDebugTestPressed;
     public event EventHandler OnDebugRestartPressed;
+    public event EventHandler OnPausePressed;
 
     FishingInputActions _fishingInputActions;
 
@@ -30,6 +31,9 @@ public class FishingControls : MonoBehaviour
         _fishingInputActions.Player.FishAttempt.performed += FishAttempt_Performed;
         _fishingInputActions.Player.FishAttempt.Enable();
 
+        _fishingInputActions.Player.Pause.performed += Pause_performed;
+        _fishingInputActions.Player.Pause.Enable();
+
 
         _fishingInputActions.Debug.Test.performed += Test_performed;
         _fishingInputActions.Debug.Test.Enable();
@@ -38,13 +42,19 @@ public class FishingControls : MonoBehaviour
         _fishingInputActions.Debug.Restart.Enable();
     }
 
-    private void Restart_performed(InputAction.CallbackContext context)
+    void Pause_performed(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        OnPausePressed?.Invoke(this, EventArgs.Empty);
+    }
+
+    void Restart_performed(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
         OnDebugRestartPressed?.Invoke(this, EventArgs.Empty);
     }
 
-    private void Test_performed(InputAction.CallbackContext context)
+    void Test_performed(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
         OnDebugTestPressed?.Invoke(this, EventArgs.Empty);
@@ -61,12 +71,13 @@ public class FishingControls : MonoBehaviour
         _fishingInputActions.Player.FishAttempt.performed -= FishAttempt_Performed;
         _fishingInputActions.Player.FishAttempt.Disable();
 
+        _fishingInputActions.Player.Pause.performed -= Pause_performed;
+        _fishingInputActions.Player.Pause.Disable();
+
         _fishingInputActions.Debug.Test.performed -= Test_performed;
         _fishingInputActions.Debug.Test.Disable();
 
         _fishingInputActions.Debug.Restart.performed -= Test_performed;
         _fishingInputActions.Debug.Restart.Disable();
     }
-
-
 }
