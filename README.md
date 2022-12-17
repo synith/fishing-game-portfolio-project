@@ -5,16 +5,7 @@ Name: Fintastic Fishing <br>
 Genre: Casual <br>
 Objective: Catch each type of Fish <br>
 
-<br>
 
-### Controls
-___
-**Cast** : `T` <br> 
-**Reel** : `LMB`, `Space`, `Controller (PS:X, XB:A)` <br> 
-**Recast** : `R` <br> 
-**Menu** : `Esc` <br> 
-
-<br>
 
 
 <br>
@@ -48,7 +39,16 @@ Match the outer ring to the target ring multiple times in a row to catch a fish,
 ![image](https://user-images.githubusercontent.com/8266516/207529636-f38ff87c-c9bc-415e-a501-e4ab2b6a3b56.png)
 
 <br>
+<br>
 
+### Controls
+___
+**Cast** : `T` <br> 
+**Reel** : `LMB`, `Space`, `Controller (PS:X, XB:A)` <br> 
+**Recast** : `R` <br> 
+**Menu** : `Esc` <br> 
+
+<br>
 
 ### Project Goal
 ___
