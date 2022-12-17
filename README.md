@@ -5,12 +5,12 @@ Name: Fintastic Fishing
 Genre: Casual
 Objective: Catch each type of Fish
 
-
+![image](https://user-images.githubusercontent.com/8266516/207529636-f38ff87c-c9bc-415e-a501-e4ab2b6a3b56.png)
 
 
 <br>
 <br>
-#### December 16th, 2022
+##### December 16th, 2022
 <br>
 
 
@@ -32,9 +32,7 @@ The skills I will be focusing on in Fintastic Fishing are
 
 ### Game Loop
 ___
-Match the outer ring to the target ring multiple times in a row to catch a fish, collect all the fish to win the game.
-
-![image](https://user-images.githubusercontent.com/8266516/207529636-f38ff87c-c9bc-415e-a501-e4ab2b6a3b56.png)
+Explore and use your grapple hook to find all of the collectables.
 
 <br>
 <br>
