@@ -7,4 +7,5 @@ public class FishSO : ScriptableObject
 {
     public Transform Model;
     public List<FishingMechanic.Difficulty> difficultyList;
+    public string Name;
 }

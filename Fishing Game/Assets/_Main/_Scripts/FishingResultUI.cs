@@ -8,21 +8,12 @@ using UnityEngine.UI;
 public class FishingResultUI : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI _resultText;
-    [SerializeField] TextMeshProUGUI _difficultyText;
-    //[SerializeField] Transform _gameOverScreen;
 
     private void OnEnable()
     {
         FishingMechanic.OnFishAttempt += FishingMechanic_OnFishAction;
         FishingMechanic.OnFishingStart += FishingMechanic_OnFishingStart;
         FishingMechanic.OnFishingRestart += FishingMechanic_OnFishingRestart;
-        FishingMechanic.OnDifficultyChanged += FishingMechanic_OnDifficultyChanged;
-        FishTracker.Instance.OnAllFishCaught += FishTracker_OnAllFishCaught;
-    }
-
-    private void FishTracker_OnAllFishCaught()
-    {
-        // TODO: Show game over screen
     }
 
     private void OnDisable()
@@ -30,13 +21,6 @@ public class FishingResultUI : MonoBehaviour
         FishingMechanic.OnFishAttempt -= FishingMechanic_OnFishAction;
         FishingMechanic.OnFishingStart -= FishingMechanic_OnFishingStart;
         FishingMechanic.OnFishingRestart -= FishingMechanic_OnFishingRestart;
-        FishingMechanic.OnDifficultyChanged -= FishingMechanic_OnDifficultyChanged;
-        FishTracker.Instance.OnAllFishCaught -= FishTracker_OnAllFishCaught;
-    }
-
-    private void FishingMechanic_OnDifficultyChanged(object sender, FishingMechanic.Difficulty e)
-    {
-        _difficultyText.SetText(e.ToString());
     }
 
     private void FishingMechanic_OnFishingRestart(object sender, EventArgs e)

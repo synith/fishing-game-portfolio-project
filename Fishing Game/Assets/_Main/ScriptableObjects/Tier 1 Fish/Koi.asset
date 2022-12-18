@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: -8679921383154817045, guid: a64f943714e9288499293e3562cdf001, type: 3}
   difficultyList: 020000000000000001000000
+  Name: Koi

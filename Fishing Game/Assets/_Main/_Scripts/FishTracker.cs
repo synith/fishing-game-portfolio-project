@@ -10,13 +10,14 @@ public class FishTracker : MonoBehaviour
 
     public event Action<FishSO> OnActiveFishChanged;
     public event Action OnAllFishCaught;
+    public event Action<FishSO> OnFishCaught;
 
     List<FishSO> _availableFishList;
     List<FishSO> _caughtFishList;
 
     [SerializeField] FishListSO fishTier1;
 
-    FishSO activeFish;
+    FishSO _activeFish;
 
     void Awake()
     {
@@ -76,15 +77,19 @@ public class FishTracker : MonoBehaviour
         {
             Debug.Log(item.name);
         }
+
+        OnFishCaught?.Invoke(fish);
     }
 
     bool IsAvailableFishListEmpty() => _availableFishList.Count == 0;
 
     void SetActiveFish(FishSO fish)
     {
-        activeFish = fish;
+        _activeFish = fish;
         OnActiveFishChanged?.Invoke(fish);
     }
 
-    public FishSO GetActiveFish() => activeFish;
+    public List<FishSO> GetAvailableFishList() => _availableFishList;
+    public List<FishSO> GetCaughtFishList() => _caughtFishList;
+    public FishSO GetActiveFish() => _activeFish;
 }

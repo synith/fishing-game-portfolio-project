@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: -8679921383154817045, guid: cd1eb847e77562f41b3e7a548d4c0086, type: 3}
   difficultyList: 020000000200000000000000
+  Name: Flatfish
