@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: -8679921383154817045, guid: e619282e946fc1348a2696c9d9ccafb6, type: 3}
   difficultyList: 0000000000000000
+  Name: Goldfish

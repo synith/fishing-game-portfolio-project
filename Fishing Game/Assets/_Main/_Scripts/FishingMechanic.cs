@@ -27,7 +27,7 @@ public class FishingMechanic : MonoBehaviour
     [SerializeField] MMFeedbacks FishingStartedFeedback;
     [SerializeField] MMFeedbacks FishCaughtFeedback;
 
-    const float SHRINK_RATE = 5;
+    const float SHRINK_RATE = 8;
 
     const float EASY_START_RADIUS = 6f;
     const float MEDIUM_START_RADIUS = 4.5f;

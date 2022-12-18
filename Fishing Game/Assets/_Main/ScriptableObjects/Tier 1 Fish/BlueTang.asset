@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: -8679921383154817045, guid: 54808815d07b96f4b825f3463152ecc4, type: 3}
   difficultyList: 0100000001000000
+  Name: Blue Tang
