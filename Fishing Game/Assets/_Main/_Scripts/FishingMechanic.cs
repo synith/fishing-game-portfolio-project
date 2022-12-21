@@ -38,6 +38,8 @@ public class FishingMechanic : MonoBehaviour
     const float PLAYER_ZONE_THICKNESS = 0.2f;
     const float MIN_RADIUS = 0.1f;
 
+    const float CAST_ANIMATION_COOLDOWN = 1.5f;
+
     List<Difficulty> _difficultyList;
     Difficulty _currentDifficulty;
 
@@ -45,6 +47,8 @@ public class FishingMechanic : MonoBehaviour
     float _currentRadius;
     bool _isShrinking;
     bool _hasAttempted;
+
+    FishingRodAnimation _fishingRodAnimation;
 
     #endregion
 
@@ -55,22 +59,35 @@ public class FishingMechanic : MonoBehaviour
     void OnEnable()
     {
         FishingControls.Instance.OnFishAttemptPressed += FishingControls_OnFishAttempt;
-        FishingControls.Instance.OnDebugTestPressed += FishingControls_OnDebugTest;
-        FishingControls.Instance.OnDebugRestartPressed += FishingControls_OnDebugRestart;
+        FishingControls.Instance.OnFishingRodCastPressed += FishingControls_OnCast;
+        FishingControls.Instance.OnFishingRodRecastPressed += FishingControls_OnRecast;
 
         FishTracker.Instance.OnActiveFishChanged += FishTracker_OnActiveFishChanged;
     }
     void OnDisable()
     {
         FishingControls.Instance.OnFishAttemptPressed -= FishingControls_OnFishAttempt;
-        FishingControls.Instance.OnDebugTestPressed -= FishingControls_OnDebugTest;
-        FishingControls.Instance.OnDebugRestartPressed -= FishingControls_OnDebugRestart;
+        FishingControls.Instance.OnFishingRodCastPressed -= FishingControls_OnCast;
+        FishingControls.Instance.OnFishingRodRecastPressed -= FishingControls_OnRecast;
 
         FishTracker.Instance.OnActiveFishChanged -= FishTracker_OnActiveFishChanged;
     }
     void FishingControls_OnFishAttempt(object sender, EventArgs e) => AttemptToCatchFish();
-    void FishingControls_OnDebugTest(object sender, EventArgs e) => StartFishing();
-    void FishingControls_OnDebugRestart(object sender, EventArgs e) => RestartFishing(_currentDifficulty);
+    void FishingControls_OnCast(object sender, EventArgs e)
+    {
+        if (_hasAttempted) return;
+        _fishingRodAnimation.PlayCastAnimation();
+        StartCoroutine(nameof(Cast));
+    }
+
+    IEnumerator Cast()
+    {        
+        yield return new WaitForSeconds(CAST_ANIMATION_COOLDOWN);
+        StartFishing();
+    }
+
+    void FishingControls_OnRecast(object sender, EventArgs e) => RestartFishing(_currentDifficulty);
+
     void FishTracker_OnActiveFishChanged(FishSO fish) => SetDifficultyListFromFish(fish);
 
     #endregion
@@ -85,6 +102,7 @@ public class FishingMechanic : MonoBehaviour
     {
         FishSO startingFish = FishTracker.Instance.GetActiveFish();
         SetDifficultyListFromFish(startingFish);
+        _fishingRodAnimation = FindObjectOfType<FishingRodAnimation>();
 
         _startingColor = _targetZone.GetColor();
     }
