@@ -65,20 +65,14 @@ public class FishTracker : MonoBehaviour
         Debug.Log($"Caught Fish: {fish}");
         _availableFishList.Remove(fish);
         _caughtFishList.Add(fish);
+        OnFishCaught?.Invoke(fish);
 
         if (IsAvailableFishListEmpty())
         {
             Debug.Log("YOU WIN!!!!");
             OnAllFishCaught?.Invoke();
             return;
-        }
-
-        foreach (var item in _availableFishList)
-        {
-            Debug.Log(item.name);
-        }
-
-        OnFishCaught?.Invoke(fish);
+        }        
     }
 
     bool IsAvailableFishListEmpty() => _availableFishList.Count == 0;

@@ -1,7 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class MusicPlayer : MonoBehaviour
 {
     [SerializeField] AudioClip[] _musicTracks;
@@ -16,12 +16,14 @@ public class MusicPlayer : MonoBehaviour
     {
         _audioSource = GetComponent<AudioSource>();
         _volumeLevel = _audioSource.volume;
+        _currentTrack = GetRandomTrack();
     }
 
-    public void PlayNextTrack()
-    {
-        PlayMusic(GetNextTrack());
-    }
+    public void PlayRandomTrack() => PlayMusic(GetRandomTrack());
+
+    public void PlayNextTrack() => PlayMusic(GetNextTrack());
+
+    int GetRandomTrack() => Random.Range(0, _musicTracks.Length);
 
     int GetNextTrack() => (_currentTrack + 1) % _musicTracks.Length;
 

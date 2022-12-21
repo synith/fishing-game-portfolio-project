@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,6 +40,12 @@ public class GameOverUI : MonoBehaviour
 
     private void FishTracker_OnAllFishCaught()
     {
+        StartCoroutine(nameof(PauseAndShowGameOverScreen));       
+    }
+
+    IEnumerator PauseAndShowGameOverScreen()
+    {
+        yield return new WaitForSeconds(1f);
         Time.timeScale = 0f;
         Show();
     }
