@@ -35,8 +35,8 @@ public class FishingResultUI : MonoBehaviour
 
     private void FishingMechanic_OnFishAction(bool isAttemptPossible, bool isLastFishingDifficulty)
     {
-        string result = isAttemptPossible ? isLastFishingDifficulty ? "Success!" : "Keep Going!" : "Failed";
-        string restart = isAttemptPossible ? isLastFishingDifficulty? "Press R to Restart" : "" : "Press R to Restart";
-        _resultText.SetText(result + "\n" + restart);
+        string status = isAttemptPossible ? isLastFishingDifficulty ? "Success!" : "Keep Going!" : "Failed";
+        string recast = isAttemptPossible ? isLastFishingDifficulty? "Press R to Recast" : "" : "Press R to Recast";
+        _resultText.SetText(status + "\n" + recast);
     }
 }

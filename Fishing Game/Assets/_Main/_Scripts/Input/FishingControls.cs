@@ -8,8 +8,8 @@ public class FishingControls : MonoBehaviour
 
     public event EventHandler OnFishAttemptPressed;
 
-    public event EventHandler OnDebugTestPressed;
-    public event EventHandler OnDebugRestartPressed;
+    public event EventHandler OnFishingRodCastPressed;
+    public event EventHandler OnFishingRodRecastPressed;
     public event EventHandler OnPausePressed;
 
     FishingInputActions _fishingInputActions;
@@ -51,13 +51,13 @@ public class FishingControls : MonoBehaviour
     void Restart_performed(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-        OnDebugRestartPressed?.Invoke(this, EventArgs.Empty);
+        OnFishingRodRecastPressed?.Invoke(this, EventArgs.Empty);
     }
 
     void Test_performed(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-        OnDebugTestPressed?.Invoke(this, EventArgs.Empty);
+        OnFishingRodCastPressed?.Invoke(this, EventArgs.Empty);
     }
 
     void FishAttempt_Performed(InputAction.CallbackContext context)
