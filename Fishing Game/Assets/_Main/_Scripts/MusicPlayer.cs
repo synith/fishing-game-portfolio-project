@@ -1,11 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class MusicPlayer : MonoBehaviour
 {
     [SerializeField] AudioClip[] _musicTracks;
-
 
     AudioSource _audioSource;
     bool _isFading;
@@ -21,6 +20,7 @@ public class MusicPlayer : MonoBehaviour
     {
         _audioSource = GetComponent<AudioSource>();
         _volumeLevel = _audioSource.volume;
+        _currentTrack = GetRandomTrack();
     }
 
     void OnEnable()

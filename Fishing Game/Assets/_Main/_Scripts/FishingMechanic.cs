@@ -27,7 +27,7 @@ public class FishingMechanic : MonoBehaviour
     [SerializeField] MMFeedbacks FishingStartedFeedback;
     [SerializeField] MMFeedbacks FishCaughtFeedback;
 
-    const float SHRINK_RATE = 8;
+    const float SHRINK_RATE = 6;
 
     const float EASY_START_RADIUS = 6f;
     const float MEDIUM_START_RADIUS = 4.5f;
@@ -73,15 +73,15 @@ public class FishingMechanic : MonoBehaviour
         FishTracker.Instance.OnActiveFishChanged -= FishTracker_OnActiveFishChanged;
     }
     void FishingControls_OnFishAttempt(object sender, EventArgs e) => AttemptToCatchFish();
-    void FishingControls_OnCast(object sender, EventArgs e)
+    void FishingControls_OnCast(object sender, EventArgs e) 
     {
         if (_hasAttempted) return;
-        _fishingRodAnimation.PlayCastAnimation();
-        StartCoroutine(nameof(Cast));
+        StartCoroutine(nameof(CastAfterAnimation));
     }
 
-    IEnumerator Cast()
-    {        
+    IEnumerator CastAfterAnimation()
+    {
+        _fishingRodAnimation.PlayAnimation(FishingRodAnimation.AnimationType.Cast);
         yield return new WaitForSeconds(CAST_ANIMATION_COOLDOWN);
         StartFishing();
     }
@@ -97,6 +97,7 @@ public class FishingMechanic : MonoBehaviour
     void Awake()
     {
         _difficultyList = new List<Difficulty>();
+        Time.timeScale = 1f;
     }
     void Start()
     {
@@ -133,7 +134,7 @@ public class FishingMechanic : MonoBehaviour
         if (_hasAttempted) return;
 
         _isShrinking = true;
-        StartCoroutine(nameof(ShowAttemptPossible));
+        StartCoroutine(nameof(WaitUntilAttemptPossible));
 
         FishingStartedFeedback?.PlayFeedbacks();
         OnFishingStart?.Invoke(this, EventArgs.Empty);
@@ -147,7 +148,7 @@ public class FishingMechanic : MonoBehaviour
         _hasAttempted = true;
         _isShrinking = false;
 
-        StopCoroutine(nameof(ShowAttemptPossible));
+        StopCoroutine(nameof(WaitUntilAttemptPossible));
         AttemptMadeFeedback?.PlayFeedbacks();
 
         bool isAttemptPossible = IsPlayerInsideZone();
@@ -155,6 +156,7 @@ public class FishingMechanic : MonoBehaviour
 
         TryCatchFish();
         OnFishAttempt?.Invoke(isAttemptPossible, isFishOnLastDifficulty);
+        
 
         void TryCatchFish()
         {
@@ -175,6 +177,8 @@ public class FishingMechanic : MonoBehaviour
 
                 _currentDifficulty = GetNextDifficultyInList();
 
+                _fishingRodAnimation.PlayAnimation(FishingRodAnimation.AnimationType.Struggle);
+
                 RestartFishing(_currentDifficulty);
 
                 Invoke(nameof(StartFishing), 1.5f);
@@ -189,7 +193,6 @@ public class FishingMechanic : MonoBehaviour
 
                 FishTracker.Instance.SetRandomFishActive();
                 _currentDifficulty = GetNextDifficultyInList();
-
                 // RestartFishing(currentDifficulty);
 
                 print("FAIL");
@@ -208,12 +211,16 @@ public class FishingMechanic : MonoBehaviour
         OnFishingRestart?.Invoke(this, EventArgs.Empty);
     }
 
-    IEnumerator ShowAttemptPossible()
+    IEnumerator WaitUntilAttemptPossible()
     {
         yield return new WaitUntil(() => IsPlayerInsideZone());
         AttemptPossibleFeedback?.PlayFeedbacks();
+
     }
-    
+    void ShowAttemptPossible()
+    {
+        _fishingRodAnimation.PlayAnimation(FishingRodAnimation.AnimationType.Struggle);
+    }
     void HandleZoneColor()
     {
         if (IsPlayerInsideZone())
@@ -263,16 +270,13 @@ public class FishingMechanic : MonoBehaviour
 
         OnDifficultyChanged?.Invoke(this, difficulty);
 
-        float GetStartRadiusForDifficulty(Difficulty difficulty)
+        float GetStartRadiusForDifficulty(Difficulty difficulty) => difficulty switch
         {
-            switch (difficulty)
-            {
-                case Difficulty.Easy: return EASY_START_RADIUS;
-                case Difficulty.Medium: return MEDIUM_START_RADIUS;
-                case Difficulty.Hard: return HARD_START_RADIUS;
-                default: return EASY_START_RADIUS;
-            }
-        }
+            Difficulty.Easy => EASY_START_RADIUS,
+            Difficulty.Medium => MEDIUM_START_RADIUS,
+            Difficulty.Hard => HARD_START_RADIUS,
+            _ => EASY_START_RADIUS,
+        };
     }
 
     Difficulty GetNextDifficultyInList()

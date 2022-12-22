@@ -6,7 +6,21 @@ public class FishingRodAnimation : MonoBehaviour
 {
     [SerializeField] Animator fishingRodAnimator;
 
-    const string CAST_TRIGGER = "Cast";
+    public enum AnimationType { Cast, Struggle, }
 
-    public void PlayCastAnimation() => fishingRodAnimator.SetTrigger("Cast");
+    const string CAST_TRIGGER = "Cast";
+    const string STRUGGLE_TRIGGER = "Struggle";
+
+
+    string GetTriggerWord(AnimationType animationType) => animationType switch
+    {
+        AnimationType.Cast => CAST_TRIGGER,
+        AnimationType.Struggle => STRUGGLE_TRIGGER,
+        _ => STRUGGLE_TRIGGER,
+    };
+
+    public void PlayAnimation(AnimationType animationType)
+    {
+        fishingRodAnimator.SetTrigger(GetTriggerWord(animationType));
+    }
 }
