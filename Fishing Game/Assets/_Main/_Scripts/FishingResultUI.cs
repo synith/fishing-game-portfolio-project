@@ -13,14 +13,14 @@ public class FishingResultUI : MonoBehaviour
     {
         FishingMechanic.OnFishAttempt += FishingMechanic_OnFishAction;
         FishingMechanic.OnFishingStart += FishingMechanic_OnFishingStart;
-        FishingMechanic.OnFishingRestart += FishingMechanic_OnFishingRestart;
+        FishingMechanic.OnFishingReady += FishingMechanic_OnFishingRestart;
     }
 
     private void OnDisable()
     {
         FishingMechanic.OnFishAttempt -= FishingMechanic_OnFishAction;
         FishingMechanic.OnFishingStart -= FishingMechanic_OnFishingStart;
-        FishingMechanic.OnFishingRestart -= FishingMechanic_OnFishingRestart;
+        FishingMechanic.OnFishingReady -= FishingMechanic_OnFishingRestart;
     }
 
     private void FishingMechanic_OnFishingRestart(object sender, EventArgs e)
