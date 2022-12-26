@@ -25,7 +25,7 @@ public class FishingResultUI : MonoBehaviour
 
     private void FishingMechanic_OnFishingRestart(object sender, EventArgs e)
     {
-        _resultText.SetText("Press T to Cast");
+        _resultText.SetText("Press to Cast!");
     }
 
     private void FishingMechanic_OnFishingStart(object sender, EventArgs e)
@@ -36,7 +36,7 @@ public class FishingResultUI : MonoBehaviour
     private void FishingMechanic_OnFishAction(bool isAttemptPossible, bool isLastFishingDifficulty)
     {
         string status = isAttemptPossible ? isLastFishingDifficulty ? "Success!" : "Keep Going!" : "Failed";
-        string recast = isAttemptPossible ? isLastFishingDifficulty? "Press R to Recast" : "" : "Press R to Recast";
+        string recast = isAttemptPossible ? isLastFishingDifficulty? "Press to Recast" : "" : "Press to Recast";
         _resultText.SetText(status + "\n" + recast);
     }
 }
