@@ -8,11 +8,18 @@ public class Zone : MonoBehaviour
     [SerializeField] Ring outsideRing;
     [SerializeField] ZoneVisual zoneVisual;
     [SerializeField] SpriteRenderer zoneSpriteRenderer;
+    [SerializeField] Color zoneColor;
+
+    private void Awake()
+    {
+        zoneColor = zoneSpriteRenderer.color;
+    }
+
 
     public float GetInsideRingRadius() => insideRing.GetRadius();
     public float GetOutsideRingRadius() => outsideRing.GetRadius();
     public void SetColor(Color color) => zoneSpriteRenderer.color = color;
-    public Color GetColor() => zoneSpriteRenderer.color;
+    public Color GetColor() => zoneColor;
 
     public void SetZone(float radius, float thickness)
     {
