@@ -1006,7 +1006,8 @@ MonoBehaviour:
   MaxVolume: 1
   MinPitch: 1
   MaxPitch: 1
-  SfxAudioMixerGroup: {fileID: 0}
+  SfxAudioMixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+    type: 2}
   Priority: 128
 --- !u!1001 &118552347
 PrefabInstance:
@@ -1644,7 +1645,8 @@ MonoBehaviour:
   MaxVolume: 1
   MinPitch: 1
   MaxPitch: 1
-  SfxAudioMixerGroup: {fileID: 0}
+  SfxAudioMixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+    type: 2}
   Priority: 128
 --- !u!114 &121284551
 MonoBehaviour:
@@ -1692,7 +1694,8 @@ MonoBehaviour:
   MaxVolume: 1
   MinPitch: 1
   MaxPitch: 1
-  SfxAudioMixerGroup: {fileID: 0}
+  SfxAudioMixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+    type: 2}
   Priority: 128
 --- !u!1 &140620104
 GameObject:
@@ -2498,7 +2501,8 @@ MonoBehaviour:
   MaxVolume: 1
   MinPitch: 1
   MaxPitch: 1
-  SfxAudioMixerGroup: {fileID: 0}
+  SfxAudioMixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+    type: 2}
   Priority: 128
 --- !u!114 &319427704
 MonoBehaviour:
@@ -3378,7 +3382,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 549006195}
-  m_LocalRotation: {x: 0.11117929, y: 0.8782944, z: -0.3931112, w: 0.2483983}
+  m_LocalRotation: {x: 0.111179285, y: 0.8782944, z: -0.3931112, w: 0.24839827}
   m_LocalPosition: {x: -4.15, y: 8.97, z: 6.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4461,7 +4465,8 @@ MonoBehaviour:
   MaxVolume: 1
   MinPitch: 1
   MaxPitch: 1
-  SfxAudioMixerGroup: {fileID: 0}
+  SfxAudioMixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+    type: 2}
   Priority: 128
 --- !u!114 &857817951
 MonoBehaviour:
@@ -4868,7 +4873,8 @@ MonoBehaviour:
   MaxVolume: 1
   MinPitch: 1
   MaxPitch: 1
-  SfxAudioMixerGroup: {fileID: 0}
+  SfxAudioMixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+    type: 2}
   Priority: 128
 --- !u!1001 &891216468
 PrefabInstance:
@@ -5951,7 +5957,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1261398802}
-  m_LocalRotation: {x: 0.11117929, y: 0.8782944, z: -0.3931112, w: 0.2483983}
+  m_LocalRotation: {x: 0.111179285, y: 0.8782944, z: -0.3931112, w: 0.24839827}
   m_LocalPosition: {x: -4.15, y: 8.97, z: 6.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

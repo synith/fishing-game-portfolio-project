@@ -1,10 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 
 [RequireComponent(typeof(AudioSource))]
 public class MusicPlayer : MonoBehaviour
 {
     [SerializeField] AudioClip[] _musicTracks;
+    VolumeManager _volumeManager;
 
     AudioSource _audioSource;
     bool _isFading;
@@ -18,8 +20,8 @@ public class MusicPlayer : MonoBehaviour
 
     void Awake()
     {
+        _volumeManager = GetComponent<VolumeManager>();
         _audioSource = GetComponent<AudioSource>();
-        _volumeLevel = _audioSource.volume;
         _currentTrack = GetRandomTrack();
     }
 
@@ -32,11 +34,11 @@ public class MusicPlayer : MonoBehaviour
         else if (PlayerPrefs.HasKey(MUSIC_VOLUME_PREF))
         {
             float volume = PlayerPrefs.GetFloat(MUSIC_VOLUME_PREF);
-            ChangeVolume(volume);
+            ChangeAudioMixerVolume(volume);
         }
     }
 
-    void MusicVolumeUI_OnVolumeChanged(float volume) => ChangeVolume(volume);
+    void MusicVolumeUI_OnVolumeChanged(float volume) => ChangeAudioMixerVolume(volume);
 
     void OnDisable()
     {
@@ -50,7 +52,12 @@ public class MusicPlayer : MonoBehaviour
 
     public void PlayNextTrack() => PlayMusic(GetNextTrack());
 
-    void ChangeVolume(float volume)
+    void ChangeAudioMixerVolume(float volume)
+    {
+        _volumeManager.ChangeVolume(volume);
+    }
+
+    void ChangeAudioSourceVolume(float volume)
     {
         _volumeLevel = volume * _maxVolume;
         _audioSource.volume = _volumeLevel;
