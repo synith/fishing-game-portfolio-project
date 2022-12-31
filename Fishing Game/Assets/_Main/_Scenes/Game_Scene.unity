@@ -2667,6 +2667,7 @@ Transform:
   - {fileID: 1991976525}
   - {fileID: 1161342614}
   - {fileID: 1610891126}
+  - {fileID: 1296754275}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4182,6 +4183,8 @@ MonoBehaviour:
   _gameOverScreen: {fileID: 43296324}
   _menuButton: {fileID: 1382732315}
   _quitButton: {fileID: 534973679}
+  _buttonSound: {fileID: 8300000, guid: ab92a7ebe88e7a34f9bbdb817e6d99d7, type: 3}
+  _victorySound: {fileID: 8300000, guid: 753aceddf9d6b154b917018dc4138a76, type: 3}
 --- !u!1 &792063195
 GameObject:
   m_ObjectHideFlags: 0
@@ -5537,7 +5540,6 @@ Transform:
   m_Children:
   - {fileID: 1713610901}
   - {fileID: 764810451}
-  - {fileID: 1296754275}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5755,6 +5757,7 @@ MonoBehaviour:
   _resumeButton: {fileID: 469527021}
   _menuButton: {fileID: 989750837}
   _quitButton: {fileID: 549195349}
+  _buttonSound: {fileID: 8300000, guid: ab92a7ebe88e7a34f9bbdb817e6d99d7, type: 3}
 --- !u!1 &1161342613
 GameObject:
   m_ObjectHideFlags: 0
@@ -6020,7 +6023,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 583081654}
-  m_Father: {fileID: 1111120691}
+  m_Father: {fileID: 349409083}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 28.211, z: 0}
 --- !u!1 &1317919452

@@ -7,7 +7,7 @@ public class FishLabelUI : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI _text;
 
-    FishSO _fish;
+    FishSO fish;
 
     [SerializeField] Color _availableColor;
     [SerializeField] Color _caughtColor;
@@ -28,14 +28,14 @@ public class FishLabelUI : MonoBehaviour
 
     void FishTracker_OnFishCaught(FishSO fish)
     {
-        if (fish != _fish) return;
+        if (fish != this.fish) return;
 
         SetTextColor(_caughtColor);
     }
 
     public void SetFish(FishSO fish)
     {
-        _fish = fish;
+        this.fish = fish;
 
         SetText(fish.Name);
     }

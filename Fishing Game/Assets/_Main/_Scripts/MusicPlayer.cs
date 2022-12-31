@@ -6,23 +6,23 @@ using UnityEngine.Audio;
 public class MusicPlayer : MonoBehaviour
 {
     [SerializeField] AudioClip[] _musicTracks;
-    VolumeManager _volumeManager;
+    VolumeManager volumeManager;
 
-    AudioSource _audioSource;
-    bool _isFading;
-    float _fadeTime = 2f;
-    int _currentTrack = -1;
-    float _volumeLevel;
+    AudioSource audioSource;
+    bool isFading;
+    float fadeTime = 2f;
+    int currentTrack = -1;
+    float volumeLevel;
 
-    float _maxVolume = 0.5f;
+    float maxVolume = 0.5f;
 
     const string MUSIC_VOLUME_PREF = "Music_Volume";
 
     void Awake()
     {
-        _volumeManager = GetComponent<VolumeManager>();
-        _audioSource = GetComponent<AudioSource>();
-        _currentTrack = GetRandomTrack();
+        volumeManager = GetComponent<VolumeManager>();
+        audioSource = GetComponent<AudioSource>();
+        currentTrack = GetRandomTrack();
     }
 
     void OnEnable()
@@ -54,18 +54,18 @@ public class MusicPlayer : MonoBehaviour
 
     void ChangeAudioMixerVolume(float volume)
     {
-        _volumeManager.ChangeVolume(volume);
+        volumeManager.ChangeVolume(volume);
     }
 
     void ChangeAudioSourceVolume(float volume)
     {
-        _volumeLevel = volume * _maxVolume;
-        _audioSource.volume = _volumeLevel;
+        volumeLevel = volume * maxVolume;
+        audioSource.volume = volumeLevel;
     }
 
     int GetRandomTrack() => Random.Range(0, _musicTracks.Length);
 
-    int GetNextTrack() => (_currentTrack + 1) % _musicTracks.Length;
+    int GetNextTrack() => (currentTrack + 1) % _musicTracks.Length;
 
     void Update()
     {
@@ -74,46 +74,46 @@ public class MusicPlayer : MonoBehaviour
             PlayNextTrack();
         }
 
-        if (!_audioSource.isPlaying)
+        if (!audioSource.isPlaying)
         {
             PlayNextTrack();
         }
 
-        if (!_isFading) return;
-        _audioSource.volume -= _volumeLevel * Time.deltaTime / _fadeTime;
+        if (!isFading) return;
+        audioSource.volume -= volumeLevel * Time.deltaTime / fadeTime;
     }
 
     void PlayMusic(int trackNumber)
     {
-        if (trackNumber == _currentTrack) return;
+        if (trackNumber == currentTrack) return;
 
-        if (_audioSource.isPlaying)
+        if (audioSource.isPlaying)
         {
             StartCoroutine(FadeOut(trackNumber));
         }
         else
         {
-            _currentTrack = trackNumber;
-            _audioSource.clip = _musicTracks[trackNumber];
-            _audioSource.Play();
+            currentTrack = trackNumber;
+            audioSource.clip = _musicTracks[trackNumber];
+            audioSource.Play();
         }
     }
 
     IEnumerator FadeOut(int trackNumber)
     {
-        float startVolume = _audioSource.volume;
+        float startVolume = audioSource.volume;
 
-        _isFading = true;
+        isFading = true;
 
-        yield return new WaitUntil(() => _audioSource.volume < 0.1f);
-        _isFading = false;
+        yield return new WaitUntil(() => audioSource.volume < 0.1f);
+        isFading = false;
 
-        _audioSource.Stop();
-        _audioSource.volume = startVolume;
-        _volumeLevel = _audioSource.volume;
+        audioSource.Stop();
+        audioSource.volume = startVolume;
+        volumeLevel = audioSource.volume;
 
-        _currentTrack = trackNumber;
-        _audioSource.clip = _musicTracks[trackNumber];
-        _audioSource.Play();
+        currentTrack = trackNumber;
+        audioSource.clip = _musicTracks[trackNumber];
+        audioSource.Play();
     }
 }

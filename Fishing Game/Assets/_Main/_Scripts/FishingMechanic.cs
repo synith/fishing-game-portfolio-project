@@ -43,16 +43,16 @@ public class FishingMechanic : MonoBehaviour
 
     const float CAST_ANIMATION_COOLDOWN = 1.5f;
 
-    List<Difficulty> _difficultyList;
-    Difficulty _currentDifficulty;
+    List<Difficulty> difficultyList;
+    Difficulty currentDifficulty;
 
-    Color _startingColor;
-    float _currentRadius;
-    bool _isShrinking;
-    bool _hasAttempted;
+    Color startingColor;
+    float currentRadius;
+    bool isShrinking;
+    bool hasAttempted;
 
-    FishingRodAnimation _fishingRodAnimation;
-    FishSO _activeFish;
+    FishingRodAnimation fishingRodAnimation;
+    FishSO activeFish;
 
     #endregion
         
@@ -61,45 +61,39 @@ public class FishingMechanic : MonoBehaviour
 
     void OnEnable()
     {
-        FishingControls.Instance.OnFishAttemptPressed += FishingControls_OnFishAttempt;
-        FishingControls.Instance.OnFishingRodCastPressed += FishingControls_OnCast;
-        FishingControls.Instance.OnFishingRodRecastPressed += FishingControls_OnRecast;
+        FishingControls.Instance.OnButtonPressed += FishingControls_OnButtonPressed;
 
         FishTracker.Instance.OnActiveFishChanged += FishTracker_OnActiveFishChanged;
     }
 
     void OnDisable()
     {
-        FishingControls.Instance.OnFishAttemptPressed -= FishingControls_OnFishAttempt;
-        FishingControls.Instance.OnFishingRodCastPressed -= FishingControls_OnCast;
-        FishingControls.Instance.OnFishingRodRecastPressed -= FishingControls_OnRecast;
+        FishingControls.Instance.OnButtonPressed -= FishingControls_OnButtonPressed;
 
         FishTracker.Instance.OnActiveFishChanged -= FishTracker_OnActiveFishChanged;
     }
 
-    void FishingControls_OnFishAttempt(object sender, EventArgs e) => OnButtonPress();
-    void FishingControls_OnCast(object sender, EventArgs e) => OnButtonPress();
-    void FishingControls_OnRecast(object sender, EventArgs e) => OnButtonPress();
-    void FishTracker_OnActiveFishChanged(FishSO fish) => _activeFish = fish;
+    void FishingControls_OnButtonPressed(object sender, EventArgs e) => ButtonPressed();
+    void FishTracker_OnActiveFishChanged(FishSO fish) => activeFish = fish;
 
     #endregion
 
 
     void Awake()
     {
-        _difficultyList = new List<Difficulty>();
+        difficultyList = new List<Difficulty>();
         Time.timeScale = 1f;
     }
     void Start()
     {
-        _startingColor = _targetZone.GetColor();
+        startingColor = _targetZone.GetColor();
 
         ReadyState readyState = new(this);
         fishingStatePattern = new FishingStatePattern(readyState);
         fishingStatePattern.Enter();
 
 
-        _fishingRodAnimation = FindObjectOfType<FishingRodAnimation>();
+        fishingRodAnimation = FindObjectOfType<FishingRodAnimation>();
         
     }
     void Update()
@@ -110,23 +104,23 @@ public class FishingMechanic : MonoBehaviour
 
 
 
-    public void OnButtonPress() => fishingStatePattern.HandleButtonPress();
+    public void ButtonPressed() => fishingStatePattern.HandleButtonPress();
 
     public void Cast()
     {
-        if (_isShrinking) return;
+        if (isShrinking) return;
         StartCoroutine(nameof(ShrinkAfterCast));
-        _isShrinking = true;
+        isShrinking = true;
     }
     public void HandleShrinking()
     {
-        _currentRadius -= SHRINK_RATE * Time.deltaTime;
+        currentRadius -= SHRINK_RATE * Time.deltaTime;
 
-        _playerZone.SetZone(_currentRadius, PLAYER_ZONE_THICKNESS);
+        _playerZone.SetZone(currentRadius, PLAYER_ZONE_THICKNESS);
         
         HandleZoneColor();
     }
-    public FishSO GetActiveFish() => _activeFish;
+    public FishSO GetActiveFish() => activeFish;
     public void StartFishing()
     {
         StartCoroutine(nameof(WaitUntilAttemptPossible));
@@ -138,7 +132,7 @@ public class FishingMechanic : MonoBehaviour
     }
     public void RemoveCurrentDifficulty()
     {
-        _difficultyList.Remove(_currentDifficulty);
+        difficultyList.Remove(currentDifficulty);
     }
     public void HandleFishCaught()
     {
@@ -149,12 +143,12 @@ public class FishingMechanic : MonoBehaviour
 
         FishTracker.Instance.RecordFishCaught(fish);
 
-        _isShrinking = false;
+        isShrinking = false;
     }
     public void HandleFailed()
     {
-        _isShrinking = false;
-        _hasAttempted = false;
+        isShrinking = false;
+        hasAttempted = false;
 
         AttemptFailedFeedback?.PlayFeedbacks();
         HandleZoneColor();
@@ -162,7 +156,7 @@ public class FishingMechanic : MonoBehaviour
     public void SetRandomFishActive() => FishTracker.Instance.SetRandomFishActive();
     public void PlayStruggleAnimation()
     {
-        _fishingRodAnimation.PlayAnimation(FishingRodAnimation.AnimationType.Struggle);
+        fishingRodAnimation.PlayAnimation(FishingRodAnimation.AnimationType.Struggle);
     }
     public void HandleAttemptMade()
     {   
@@ -180,11 +174,11 @@ public class FishingMechanic : MonoBehaviour
     }
     public void SetDifficultyListFromFish(FishSO fish)
     {
-        _difficultyList.Clear();
+        difficultyList.Clear();
 
         foreach (Difficulty difficulty in fish.difficultyList)
         {
-            _difficultyList.Add(difficulty);
+            difficultyList.Add(difficulty);
         }
 
         SetTargetZone();
@@ -192,10 +186,10 @@ public class FishingMechanic : MonoBehaviour
     public void SetTargetZone() => _targetZone.SetZone(TARGET_ZONE_RADIUS, TARGET_ZONE_THICKNESS);
     public void SetDifficulty(Difficulty difficulty)
     {
-        _currentDifficulty = difficulty;
+        currentDifficulty = difficulty;
 
         float startRadius = GetStartRadiusForDifficulty(difficulty);
-        _currentRadius = startRadius;
+        currentRadius = startRadius;
 
         _playerZone.SetZone(startRadius, PLAYER_ZONE_THICKNESS);
 
@@ -211,10 +205,10 @@ public class FishingMechanic : MonoBehaviour
     }
     public Difficulty GetNextDifficulty()
     {
-        Difficulty difficulty = _difficultyList[0];
+        Difficulty difficulty = difficultyList[0];
         return difficulty;
     }
-    public bool IsFishOnLastDifficulty() => _difficultyList.Count == 1;
+    public bool IsFishOnLastDifficulty() => difficultyList.Count == 1;
     public bool IsAttemptPossible() => !IsPlayerTooFarInside() && !IsPlayerTooFarOutside();
     public bool IsPlayerTooFarInside() => _playerZone.GetOutsideRingRadius() < _targetZone.GetInsideRingRadius();
 
@@ -228,7 +222,7 @@ public class FishingMechanic : MonoBehaviour
 
         fishingStatePattern.SetState(shrinkingState);
     }
-    void PlayCastAnimation() => _fishingRodAnimation.PlayAnimation(FishingRodAnimation.AnimationType.Cast);
+    void PlayCastAnimation() => fishingRodAnimation.PlayAnimation(FishingRodAnimation.AnimationType.Cast);
     IEnumerator WaitUntilAttemptPossible()
     {
         yield return new WaitUntil(() => IsAttemptPossible());
@@ -247,13 +241,13 @@ public class FishingMechanic : MonoBehaviour
             _targetZone.SetColor(_outsideZoneColor);
             return;
         }
-        else if (!_isShrinking && !IsAttemptPossible())
+        else if (!isShrinking && !IsAttemptPossible())
         {
             _targetZone.SetColor(_outsideZoneColor);
             return;
         }
-        _targetZone.SetColor(_startingColor);
+        _targetZone.SetColor(startingColor);
     }
     bool IsPlayerTooFarOutside() => _playerZone.GetInsideRingRadius() > _targetZone.GetOutsideRingRadius();
-    bool IsNotStarted() => !_isShrinking && !_hasAttempted;
+    bool IsNotStarted() => !isShrinking && !hasAttempted;
 }
