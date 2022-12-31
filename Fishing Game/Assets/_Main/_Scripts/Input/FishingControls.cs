@@ -6,13 +6,10 @@ public class FishingControls : MonoBehaviour
 {
     public static FishingControls Instance { get; private set; }
 
-    public event EventHandler OnFishAttemptPressed;
-
-    public event EventHandler OnFishingRodCastPressed;
-    public event EventHandler OnFishingRodRecastPressed;
+    public event EventHandler OnButtonPressed;
     public event EventHandler OnPausePressed;
 
-    FishingInputActions _fishingInputActions;
+    FishingInputActions fishingInputActions;
 
     void Awake()
     {
@@ -23,23 +20,16 @@ public class FishingControls : MonoBehaviour
         }
         Instance = this;
 
-        _fishingInputActions = new FishingInputActions();
+        fishingInputActions = new FishingInputActions();
     }
 
     void OnEnable()
     {
-        _fishingInputActions.Player.FishAttempt.performed += FishAttempt_Performed;
-        _fishingInputActions.Player.FishAttempt.Enable();
+        fishingInputActions.Player.FishAttempt.performed += FishAttempt_Performed;
+        fishingInputActions.Player.FishAttempt.Enable();
 
-        _fishingInputActions.Player.Pause.performed += Pause_performed;
-        _fishingInputActions.Player.Pause.Enable();
-
-
-        _fishingInputActions.Debug.Test.performed += Test_performed;
-        _fishingInputActions.Debug.Test.Enable();
-
-        _fishingInputActions.Debug.Restart.performed += Restart_performed;
-        _fishingInputActions.Debug.Restart.Enable();
+        fishingInputActions.Player.Pause.performed += Pause_performed;
+        fishingInputActions.Player.Pause.Enable();
     }
 
     void Pause_performed(InputAction.CallbackContext context)
@@ -48,36 +38,18 @@ public class FishingControls : MonoBehaviour
         OnPausePressed?.Invoke(this, EventArgs.Empty);
     }
 
-    void Restart_performed(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-        OnFishingRodRecastPressed?.Invoke(this, EventArgs.Empty);
-    }
-
-    void Test_performed(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-        OnFishingRodCastPressed?.Invoke(this, EventArgs.Empty);
-    }
-
     void FishAttempt_Performed(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-        OnFishAttemptPressed?.Invoke(this, EventArgs.Empty);
+        OnButtonPressed?.Invoke(this, EventArgs.Empty);
     }
 
     void OnDisable()
     {
-        _fishingInputActions.Player.FishAttempt.performed -= FishAttempt_Performed;
-        _fishingInputActions.Player.FishAttempt.Disable();
+        fishingInputActions.Player.FishAttempt.performed -= FishAttempt_Performed;
+        fishingInputActions.Player.FishAttempt.Disable();
 
-        _fishingInputActions.Player.Pause.performed -= Pause_performed;
-        _fishingInputActions.Player.Pause.Disable();
-
-        _fishingInputActions.Debug.Test.performed -= Test_performed;
-        _fishingInputActions.Debug.Test.Disable();
-
-        _fishingInputActions.Debug.Restart.performed -= Test_performed;
-        _fishingInputActions.Debug.Restart.Disable();
+        fishingInputActions.Player.Pause.performed -= Pause_performed;
+        fishingInputActions.Player.Pause.Disable();
     }
 }

@@ -12,12 +12,12 @@ public class FishTracker : MonoBehaviour
     public event Action OnAllFishCaught;
     public event Action<FishSO> OnFishCaught;
 
-    List<FishSO> _availableFishList;
-    List<FishSO> _caughtFishList;
+    List<FishSO> availableFishList;
+    List<FishSO> caughtFishList;
 
     [SerializeField] FishListSO fishTier1;
 
-    FishSO _activeFish;
+    FishSO activeFish;
 
     void Awake()
     {
@@ -28,12 +28,12 @@ public class FishTracker : MonoBehaviour
         }
         Instance = this;
 
-        _caughtFishList = new List<FishSO>();
-        _availableFishList = new List<FishSO>();
+        caughtFishList = new List<FishSO>();
+        availableFishList = new List<FishSO>();
 
         foreach (FishSO fish in fishTier1.list)
         {
-            _availableFishList.Add(fish);
+            availableFishList.Add(fish);
         }
         SetRandomFishActive();
     }
@@ -49,8 +49,8 @@ public class FishTracker : MonoBehaviour
 
     FishSO GetRandomAvailableFish()
     {
-        int index = Random.Range(0, _availableFishList.Count);
-        FishSO fish = _availableFishList[index];
+        int index = Random.Range(0, availableFishList.Count);
+        FishSO fish = availableFishList[index];
 
         return fish;
     }
@@ -63,8 +63,8 @@ public class FishTracker : MonoBehaviour
         }
 
         Debug.Log($"Caught Fish: {fish}");
-        _availableFishList.Remove(fish);
-        _caughtFishList.Add(fish);
+        availableFishList.Remove(fish);
+        caughtFishList.Add(fish);
         OnFishCaught?.Invoke(fish);
 
         if (IsAvailableFishListEmpty())
@@ -75,15 +75,15 @@ public class FishTracker : MonoBehaviour
         }        
     }
 
-    bool IsAvailableFishListEmpty() => _availableFishList.Count == 0;
+    bool IsAvailableFishListEmpty() => availableFishList.Count == 0;
 
     void SetActiveFish(FishSO fish)
     {
-        _activeFish = fish;
+        activeFish = fish;
         OnActiveFishChanged?.Invoke(fish);
     }
 
-    public List<FishSO> GetAvailableFishList() => _availableFishList;
-    public List<FishSO> GetCaughtFishList() => _caughtFishList;
-    public FishSO GetActiveFish() => _activeFish;
+    public List<FishSO> GetAvailableFishList() => availableFishList;
+    public List<FishSO> GetCaughtFishList() => caughtFishList;
+    public FishSO GetActiveFish() => activeFish;
 }

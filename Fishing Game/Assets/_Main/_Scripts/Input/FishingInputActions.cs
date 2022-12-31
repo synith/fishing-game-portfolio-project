@@ -93,6 +93,17 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""4ec822b5-7753-40e6-b1bd-695c8748a1cb"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FishAttempt"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""0e49e5c2-9704-40e3-ba25-86ad7e11534b"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
@@ -125,54 +136,6 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
-        },
-        {
-            ""name"": ""Debug"",
-            ""id"": ""3b3890eb-91be-4a7b-998b-e14bc73fe08a"",
-            ""actions"": [
-                {
-                    ""name"": ""Test"",
-                    ""type"": ""Button"",
-                    ""id"": ""9807ef8d-5473-4f86-bb1d-00676e099152"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Restart"",
-                    ""type"": ""Button"",
-                    ""id"": ""c4243c49-30c8-4907-b628-867d3fc30062"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""03b21311-8b55-46ab-939f-03c12b499b8a"",
-                    ""path"": ""<Keyboard>/t"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Test"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a7a0e2c8-a624-4ebe-b62f-37d9cb31be5c"",
-                    ""path"": ""<Keyboard>/r"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Restart"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
         }
     ],
     ""controlSchemes"": []
@@ -181,10 +144,6 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_FishAttempt = m_Player.FindAction("FishAttempt", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
-        // Debug
-        m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
-        m_Debug_Test = m_Debug.FindAction("Test", throwIfNotFound: true);
-        m_Debug_Restart = m_Debug.FindAction("Restart", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -281,55 +240,9 @@ public partial class @FishingInputActions : IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
-
-    // Debug
-    private readonly InputActionMap m_Debug;
-    private IDebugActions m_DebugActionsCallbackInterface;
-    private readonly InputAction m_Debug_Test;
-    private readonly InputAction m_Debug_Restart;
-    public struct DebugActions
-    {
-        private @FishingInputActions m_Wrapper;
-        public DebugActions(@FishingInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Test => m_Wrapper.m_Debug_Test;
-        public InputAction @Restart => m_Wrapper.m_Debug_Restart;
-        public InputActionMap Get() { return m_Wrapper.m_Debug; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(DebugActions set) { return set.Get(); }
-        public void SetCallbacks(IDebugActions instance)
-        {
-            if (m_Wrapper.m_DebugActionsCallbackInterface != null)
-            {
-                @Test.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnTest;
-                @Test.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnTest;
-                @Test.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnTest;
-                @Restart.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnRestart;
-                @Restart.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnRestart;
-                @Restart.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnRestart;
-            }
-            m_Wrapper.m_DebugActionsCallbackInterface = instance;
-            if (instance != null)
-            {
-                @Test.started += instance.OnTest;
-                @Test.performed += instance.OnTest;
-                @Test.canceled += instance.OnTest;
-                @Restart.started += instance.OnRestart;
-                @Restart.performed += instance.OnRestart;
-                @Restart.canceled += instance.OnRestart;
-            }
-        }
-    }
-    public DebugActions @Debug => new DebugActions(this);
     public interface IPlayerActions
     {
         void OnFishAttempt(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
-    }
-    public interface IDebugActions
-    {
-        void OnTest(InputAction.CallbackContext context);
-        void OnRestart(InputAction.CallbackContext context);
     }
 }

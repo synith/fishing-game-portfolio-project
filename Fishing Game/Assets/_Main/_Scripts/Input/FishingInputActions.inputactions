@@ -71,6 +71,17 @@
                 },
                 {
                     "name": "",
+                    "id": "4ec822b5-7753-40e6-b1bd-695c8748a1cb",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FishAttempt",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "0e49e5c2-9704-40e3-ba25-86ad7e11534b",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
@@ -99,54 +110,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Debug",
-            "id": "3b3890eb-91be-4a7b-998b-e14bc73fe08a",
-            "actions": [
-                {
-                    "name": "Test",
-                    "type": "Button",
-                    "id": "9807ef8d-5473-4f86-bb1d-00676e099152",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Restart",
-                    "type": "Button",
-                    "id": "c4243c49-30c8-4907-b628-867d3fc30062",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "03b21311-8b55-46ab-939f-03c12b499b8a",
-                    "path": "<Keyboard>/t",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Test",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a7a0e2c8-a624-4ebe-b62f-37d9cb31be5c",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Restart",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
